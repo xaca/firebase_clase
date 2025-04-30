@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { firebaseConfig } from '../../libs/utils/config';
-import { initializeApp } from 'firebase/app';
-import { getAuth,createUserWithEmailAndPassword } from 'firebase/auth';
+//import { firebaseConfig } from '../../libs/utils/config';
+//import { initializeApp } from 'firebase/app';
+//import { getAuth,createUserWithEmailAndPassword } from 'firebase/auth';
 import { Link } from "react-router";
 
 export default function Register() {
@@ -26,8 +26,9 @@ export default function Register() {
         password: '',
         confirmPassword: ''
     });
+     /*
     const [user,setUser] = useState<{}|null>("");
-
+   
     function createUser()
     {
       const app = initializeApp(firebaseConfig);
@@ -44,7 +45,7 @@ export default function Register() {
         console.log(errorCode,errorMessage);
       });
     }
-
+    */
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({

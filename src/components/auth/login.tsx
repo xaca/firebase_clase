@@ -2,9 +2,11 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseConfig } from "../../libs/utils/config";
 import React, { useState } from 'react';
+import { toast,Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 export default function Login() {
-
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: '', password: '' });
 
@@ -58,15 +60,21 @@ export default function Login() {
       signIn(formData.email, formData.password)
         .then((uid: string) => {
           console.log("User UID:", uid); // Log the user's uid
+          toast.success('Successfully toasted!')
+          setTimeout(()=>{
+            navigate(`/gallery/${uid}`);
+          },1000);
         })
         .catch((error: string) => {
           console.error("Error:", error); // Log the error message
+          toast.error("This didn't work.")
         });
     }
   };
 
   return (
       <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-8 w-full max-w-md">
+        <Toaster />
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Login</h2>
         
         <form className="space-y-6" onSubmit={handleSubmit}>

@@ -1,112 +1,74 @@
-import {useState} from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseConfig } from "../../libs/utils/config";
+import React, { useState } from 'react';
 
 export default function Login() {
 
-  const [formData, setFormData] = useState({
-      email: '',
-      password: '',
-    });
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [errors, setErrors] = useState({ email: '', password: '' });
 
-  const [errors, setErrors] = useState({
-      email: '',
-      password: '',
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-        ...prev,
-        [name]: value
-    }));
-    // Clear error when user starts typing
-    setErrors(prev => ({
-        ...prev,
-        [name]: ''
-    }));
+    setFormData({ ...formData, [name]: value });
   };
 
-  const validateForm = () => {
-    let isValid = true;
-    const newErrors = { ...errors };
+  const validate = () => {
+    let valid = true;
+    const newErrors = { email: '', password: '' };
 
-    // Correo validation
-    if (!formData.email.trim()) {
-        newErrors.email = 'El correo es requerido';
-        isValid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        newErrors.email = 'Ingrese un correo válido';
-        isValid = false;
+    if (!formData.email) {
+      newErrors.email = 'El correo es requerido';
+      valid = false;
+    } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email)) {
+      newErrors.email = 'El correo no es válido';
+      valid = false;
     }
 
-    // Password validation
     if (!formData.password) {
-        newErrors.password = 'La contraseña es requerida';
-        isValid = false;
-    } else if (formData.password.length < 6) {
-        newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
-        isValid = false;
+      newErrors.password = 'La contraseña es requerida';
+      valid = false;
     }
 
     setErrors(newErrors);
-    return isValid;
+    return valid;
   };
 
+  function signIn(email: string, password: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
 
-  function signIn()
-  {
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    signInWithEmailAndPassword(auth, "", "")
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      console.log(user.uid);
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode,errorMessage);
-      alert(errorMessage);
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          resolve(user.uid); // Resolve with the user's uid
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          reject(errorMessage); // Reject with the error message
+        });
     });
   }
 
   const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      
-      if (validateForm()) {
-          // Aquí iría la lógica para enviar los datos
-          signIn();
-      }
-      else
-      {
-        //alert("Verifique los datos y vuelva a intentar");
-      }
+    e.preventDefault();
+    if (validate()) {
+      signIn(formData.email, formData.password)
+        .then((uid: string) => {
+          console.log("User UID:", uid); // Log the user's uid
+        })
+        .catch((error: string) => {
+          console.error("Error:", error); // Log the error message
+        });
+    }
   };
-
- /*
-  <input
-                                type="text"
-                                id="nombre"
-                                name="nombre"
-                                value={formData.nombre}
-                                onChange={handleChange}
-                                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                                    errors.nombre ? 'border-red-500' : ''
-                                }`}
-                                placeholder="Ingrese su nombre"
-                            />
-                            {errors.nombre && <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>}
- */
 
   return (
       <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-8 w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Login</h2>
-        <p>{formData.email} {formData.password}</p>
+        
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-2">
             <label htmlFor="email" className="block text-gray-700">
@@ -120,8 +82,8 @@ export default function Login() {
               onChange={handleChange}
               placeholder="Ingrese su correo"
               className={`w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.email ? 'border-red-500' : ''}`}
-              />
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+            />
+            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
           </div>
 
           <div className="space-y-2">
@@ -132,6 +94,7 @@ export default function Login() {
               type="password"
               id="password"
               name="password"
+              value={formData.password}
               onChange={handleChange}
               placeholder="Ingrese su contraseña"
               className={`w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.password ? 'border-red-500' : ''}`}

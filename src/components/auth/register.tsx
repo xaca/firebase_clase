@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { firebaseConfig } from '../../libs/utils/config';
 import { initializeApp } from 'firebase/app';
 import { getAuth,createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore,collection, addDoc } from "firebase/firestore"; 
+import { getFirestore,collection, setDoc, doc } from "firebase/firestore"; 
 import { Link } from "react-router";
 import { toast,Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router";
@@ -125,16 +125,15 @@ export default function Register() {
         try {
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
-            const docRef = await addDoc(collection(db, "usuarios"), {
+            await setDoc(doc(db, "usuarios", `${uid}`), {
                 nombre:formData.nombre,
                 apellido:formData.apellido,
                 celular:formData.celular,
                 direccion:formData.direccion,
-                correo:formData.correo,
-                uid:uid
+                correo:formData.correo
             });
-            
-            return {error:false,id:docRef.id};
+
+            return {error:false,id:uid};
 
           } catch (e) {
             return {error:true,message:e}

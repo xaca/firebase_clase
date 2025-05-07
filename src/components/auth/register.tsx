@@ -1,12 +1,15 @@
 import { useState } from 'react';
-//import { firebaseConfig } from '../../libs/utils/config';
-//import { initializeApp } from 'firebase/app';
-//import { getAuth,createUserWithEmailAndPassword } from 'firebase/auth';
+import { firebaseConfig } from '../../libs/utils/config';
+import { initializeApp } from 'firebase/app';
+import { getAuth,createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore,collection, addDoc } from "firebase/firestore"; 
 import { Link } from "react-router";
+import { toast,Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 export default function Register() {
     
-
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         nombre: '',
         apellido: '',
@@ -26,26 +29,7 @@ export default function Register() {
         password: '',
         confirmPassword: ''
     });
-     /*
-    const [user,setUser] = useState<{}|null>("");
-   
-    function createUser()
-    {
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      createUserWithEmailAndPassword(auth, "prueba2@gmail.com", "12345678")
-      .then((userCredential) => {
-        // Signed up 
-        const user = userCredential.user;
-        console.log(user.uid);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode,errorMessage);
-      });
-    }
-    */
+     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -121,16 +105,78 @@ export default function Register() {
         return isValid;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    async function saveUserAutenticate(){
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        try{
+            
+            const ans = await createUserWithEmailAndPassword(auth,formData.correo,formData.password);
+            return {error:false,data:ans};
+        }
+        catch(e){
+            return {error:true}
+        }
+        
+    }
+
+    async function saveUserData(uid:String){
+        try {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const docRef = await addDoc(collection(db, "usuarios"), {
+                nombre:formData.nombre,
+                apellido:formData.apellido,
+                celular:formData.celular,
+                direccion:formData.direccion,
+                correo:formData.correo,
+                uid:uid
+            });
+            
+            return {error:false,id:docRef.id};
+
+          } catch (e) {
+            return {error:true,message:e}
+          }
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (validateForm()) {
             // Aquí iría la lógica para enviar los datos
-            console.log('Formulario válido', formData);
+            const response = await saveUserAutenticate();
+            
+            if(!response.error)
+            {
+                if(response.data)
+                {
+                    const ans = await saveUserData(response.data.user.uid);
+        
+                    if(!ans.error)
+                    {
+                        toast.success("Usuario creado con éxito");
+                        setTimeout(()=>{
+                            navigate("/login")
+                        },1500);
+                    }
+                    else
+                    {
+                        toast.error("Error al guardar el usuario");
+                    }
+                }
+                else{
+                    toast.error("Error al guardar el usuario");
+                }
+            }
+            else
+            {
+                toast.error("Error al guardar el usuario");
+            }
         }
     };
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+            <Toaster />
             <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-md">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">Registro</h2>
 

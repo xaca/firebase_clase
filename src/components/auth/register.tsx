@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { firebaseConfig } from '../../libs/utils/config';
 import { initializeApp } from 'firebase/app';
 import { getAuth,createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore,collection, setDoc, doc } from "firebase/firestore"; 
+import { getFirestore, setDoc, doc } from "firebase/firestore"; 
 import { Link } from "react-router";
 import { toast,Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router";

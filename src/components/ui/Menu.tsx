@@ -11,5 +11,8 @@ export default function Menu(){
       <NavLink to="/register" className="mr-4">
       Register
       </NavLink>
+      <NavLink to="/signout" className="mr-4">
+      Sign out
+      </NavLink>
     </nav>);
 }

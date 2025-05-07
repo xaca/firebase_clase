@@ -29,6 +29,8 @@ export default function Register() {
         password: '',
         confirmPassword: ''
     });
+
+    const [isLoading, setIsLoading] = useState(false);
      
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -142,9 +144,9 @@ export default function Register() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (validateForm()) {
-            // Aquí iría la lógica para enviar los datos
+            setIsLoading(true);
             const response = await saveUserAutenticate();
-            
+            let error = false;            
             if(!response.error)
             {
                 if(response.data)
@@ -160,16 +162,22 @@ export default function Register() {
                     }
                     else
                     {
-                        toast.error("Error al guardar el usuario");
+                        error = true;
                     }
                 }
-                else{
-                    toast.error("Error al guardar el usuario");
+                else{                    
+                    error = true;
                 }
             }
             else
             {
+                error = true;
+            }
+            
+            if(error)
+            {
                 toast.error("Error al guardar el usuario");
+                setIsLoading(false);
             }
         }
     };
@@ -324,9 +332,10 @@ export default function Register() {
                         </Link>
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                            className={`w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={isLoading}
                         >
-                            Enviar
+                            {isLoading ? 'Cargando...' : 'Enviar'}
                         </button>
                     </div>
                 </form>

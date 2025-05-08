@@ -121,11 +121,11 @@ export default function Register() {
         
     }
 
-    async function saveUserData(uid:String){
+    async function saveUserData(uid:string){
         try {
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
-            await setDoc(doc(db, "usuarios", `${uid}`), {
+            await setDoc(doc(db, "usuarios", uid), {
                 nombre:formData.nombre,
                 apellido:formData.apellido,
                 celular:formData.celular,
@@ -156,7 +156,7 @@ export default function Register() {
                     {
                         toast.success("Usuario creado con éxito");
                         setTimeout(()=>{
-                            navigate("/login")
+                            navigate("/")
                         },1500);
                     }
                     else

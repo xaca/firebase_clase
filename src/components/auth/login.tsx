@@ -72,7 +72,7 @@ export default function Login() {
     }
   };
 
-  return (
+  return (<section className="w-full h-[400px] flex justify-center mt-4">
       <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-lg p-8 w-full max-w-md">
         <Toaster />
         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Login</h2>
@@ -124,5 +124,6 @@ export default function Login() {
           </button>
         </form>
       </div>
+    </section>
   );
 }

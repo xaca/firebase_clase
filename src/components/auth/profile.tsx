@@ -3,12 +3,10 @@ import { useNavigate } from 'react-router';
 import { UserInfo } from '../../libs/data/user_info';
 import { useEffect } from 'react';
 
-export default function Profile({ 
-    className, 
+export default function Profile({  
     onClose, 
     userInfo 
 }: { 
-    className?: string; 
     onClose: () => void;
     userInfo: UserInfo;
 }) {
@@ -40,7 +38,7 @@ export default function Profile({
     }
 
     return (
-        <div id="profile" className={`absolute top-12 right-5 max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden md:max-w-md animate__animated hidden ${className}`}>
+        <div id="profile" className={`absolute top-12 right-5 max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden md:max-w-md animate__animated hidden`}>
             <div className="md:flex">
                 <div className="w-full p-4">
                     <div className="flex justify-between items-center">

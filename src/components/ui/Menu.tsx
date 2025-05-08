@@ -5,8 +5,8 @@ import { NavLink } from "react-router";
 import { firebaseConfig } from "../../libs/utils/config";
 import readUser from "../../libs/data/read_user";
 import Profile from "../auth/profile";
-import 'animate.css';
 import { UserInfo } from "../../libs/data/user_info";
+import 'animate.css';
 
 export default function Menu(){
     const [userInfo,setUserInfo] = useState<UserInfo | null>(null);
@@ -29,7 +29,7 @@ export default function Menu(){
     const handleProfileClick = () => {
       const profile = document.getElementById("profile");
       profile?.classList.remove("hidden");
-      
+
       if(isProfileOpen)
       {
         profile?.classList.remove("animate__fadeInDown");
@@ -43,7 +43,7 @@ export default function Menu(){
     };
 
     return (<>
-      {userInfo && <Profile userInfo={userInfo} className={""} onClose={() => setIsProfileOpen(false)}  />}
+      {userInfo && <Profile userInfo={userInfo} onClose={() => setIsProfileOpen(false)}  />}
       <nav className="flex justify-between h-[30px] mt-2 sticky top-0 bg-white z-100">
         <div>
           <NavLink to="/" className="ml-4 mr-4">

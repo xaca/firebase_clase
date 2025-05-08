@@ -21,15 +21,31 @@ export default function Profile({
 
     const handleLogout = () => {
         onClose();
+        hideProfile();
         navigate('/signout');
     }
+
+    function hideProfile(){
+        const profile = document.getElementById("profile");
+        if(profile){
+            profile.classList.remove("hidden");
+            profile.classList.remove("animate__fadeInDown");
+            profile.classList.add("animate__fadeOutUp");
+        }
+    }
+
+    function closeProfile(){
+        onClose();
+        hideProfile();
+    }
+
     return (
-        <div id="profile" className={`absolute top-10 right-5 max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden md:max-w-md ${className}`}>
+        <div id="profile" className={`absolute top-12 right-5 max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden md:max-w-md animate__animated hidden ${className}`}>
             <div className="md:flex">
                 <div className="w-full p-4">
                     <div className="flex justify-between items-center">
                         <h1 className="text-xl font-bold">UPB</h1>
-                        <X className="cursor-pointer" onClick={onClose} />
+                        <X className="cursor-pointer" onClick={closeProfile} />
                     </div>
                     <div className="flex items-center mt-4">
                         <img className="w-16 h-16 rounded-full mr-4" src="/path/to/profile.jpg" alt="Profile" />
@@ -40,7 +56,7 @@ export default function Profile({
                             <p className="text-sm text-gray-600">Celular: {userInfo?.celular}</p>
                         </div>
                     </div>                    
-                    <button onClick={handleLogout} className="text-sm text-gray-600">Cerrar sesión</button>
+                    <button onClick={handleLogout} className="text-sm text-gray-600 cursor-pointer">Cerrar sesión</button>
                 </div>
             </div>
         </div>

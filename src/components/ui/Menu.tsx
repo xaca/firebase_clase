@@ -27,14 +27,26 @@ export default function Menu(){
     }, []);  
 
     const handleProfileClick = () => {
-        setIsProfileOpen(!isProfileOpen);
+      const profile = document.getElementById("profile");
+      profile?.classList.remove("hidden");
+      
+      if(isProfileOpen)
+      {
+        profile?.classList.remove("animate__fadeInDown");
+        profile?.classList.add("animate__fadeOutUp");
+      }
+      else{
+        profile?.classList.remove("animate__fadeOutUp");
+        profile?.classList.add("animate__fadeInDown");
+      }
+      setIsProfileOpen(!isProfileOpen);
     };
 
     return (<>
-      {userInfo && <Profile userInfo={userInfo} className={isProfileOpen ? "block" : "hidden"} onClose={() => setIsProfileOpen(false)}  />}
-      <nav className="flex justify-between">
+      {userInfo && <Profile userInfo={userInfo} className={""} onClose={() => setIsProfileOpen(false)}  />}
+      <nav className="flex justify-between h-[30px] mt-2 sticky top-0 bg-white z-100">
         <div>
-          <NavLink to="/" className="mr-4">
+          <NavLink to="/" className="ml-4 mr-4">
             Home
           </NavLink>
           {!isLoggedIn && (
@@ -50,7 +62,7 @@ export default function Menu(){
         </div>
         {isLoggedIn && (
           <div>
-            <button className="mr-4" onClick={handleProfileClick}>Profile</button>
+            <button className="mr-4 cursor-pointer" onClick={handleProfileClick}>Profile</button>
           </div>
         )}
       </nav>

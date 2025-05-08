@@ -10,12 +10,13 @@ export default function Gallery(){
         (async () => {
             const products = await readProducts();
             console.log(products);
-            //setProducts(products as ProductInfo[]);
+            setProducts(products as ProductInfo[]);
         })();
     }, []);
     return(<>
     {/*{params.uid}*/}
     <h1>Galeria</h1>
+    <section>
     {products.map((product) => (
         <div key={product.id}>
             <h2>{product.nombre}</h2>
@@ -23,5 +24,6 @@ export default function Gallery(){
             <p>{product.precio}</p>
         </div>
     ))}
+    </section>
     </>);
 }

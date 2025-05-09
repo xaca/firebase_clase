@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 import readProducts from '../../libs/data/read_product';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../libs/utils/config';
+import { doc, deleteDoc, getFirestore } from "firebase/firestore";
 import { useNavigate } from 'react-router';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
+import { toast, Toaster } from 'react-hot-toast';
 
 interface Product {
     id: string;
@@ -20,9 +23,14 @@ interface Product {
   image: string;
 }*/
 
+
+
 const ShowProduct: React.FC = () => {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
 
   async function userIsLogged(){
@@ -82,8 +90,44 @@ const ShowProduct: React.FC = () => {
     }
   };
 
+  const handleDeleteClick = (product: Product) => {
+    setProductToDelete(product);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (productToDelete && !isDeleting) {
+      try {
+        setIsDeleting(true);
+        console.log('Attempting to delete product:', productToDelete);
+        
+        // Initialize Firebase only once
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Delete the document
+        await deleteDoc(doc(db, "productos", productToDelete.id));
+        console.log('Product successfully deleted');
+        
+        // Update the UI
+        setProducts(prevProducts => prevProducts.filter(p => p.id !== productToDelete.id));
+        toast.success('Producto eliminado exitosamente');
+        
+        // Close the modal
+        setIsDeleteModalOpen(false);
+        setProductToDelete(null);
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        toast.error('Error al eliminar el producto');
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
+
   return (
     <div className="p-6 mx-auto w-full">
+    <Toaster/>
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-semibold">Product List</h1>
@@ -134,9 +178,9 @@ const ShowProduct: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {products.map((product) => (
+            {products.map((product,index) => (
               <tr
-                key={product.id}
+                key={index}
                 className={`${
                   selectedProducts.includes(product.id) ? 'bg-blue-50' : ''
                 } hover:bg-gray-50`}
@@ -184,7 +228,10 @@ const ShowProduct: React.FC = () => {
                     <button className="text-gray-600 hover:text-blue-600">
                       <Pencil className="w-5 h-5" />
                     </button>
-                    <button className="text-gray-600 hover:text-red-600">
+                    <button 
+                      className="text-gray-600 hover:text-red-600"
+                      onClick={() => handleDeleteClick(product)}
+                    >
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
@@ -208,6 +255,19 @@ const ShowProduct: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          if (!isDeleting) {
+            setIsDeleteModalOpen(false);
+            setProductToDelete(null);
+          }
+        }}
+        onConfirm={handleConfirmDelete}
+        productName={productToDelete?.nombre || ''}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 };

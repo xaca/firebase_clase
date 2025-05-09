@@ -182,13 +182,13 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+        <div className="w-full h-[660px] md:h-[530px] flex justify-center p-2 md:p-4">
             <Toaster />
-            <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-md">
+            <div className="bg-white rounded-lg shadow-md p-6">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">Registro</h2>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {/* Nombre */}
                         <div>
                             <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">

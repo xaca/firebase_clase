@@ -4,7 +4,7 @@ export default function CardProduct({product}:{product:any}){
             {/* Product Image */}
             <div className="relative aspect-square mb-4">
                 <img 
-                    src={product.image} 
+                    src={product.url} 
                     alt={product.nombre}
                     className="w-full h-full object-contain"
                 />

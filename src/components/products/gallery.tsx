@@ -58,7 +58,7 @@ export default function Gallery(){
             setProducts(products as ProductInfo[]);
         })();
     }, []);
-    return(<section className="w-full h-full justify-center mt-4">
+    return(<section className="w-full h-full justify-center mt-4 p-6">
     {/*{params.uid}*/}
         <h1 className="w-full text-center mx-auto mb-4 text-2xl font-bold">Galeria</h1>
         <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">

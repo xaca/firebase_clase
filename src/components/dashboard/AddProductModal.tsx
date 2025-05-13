@@ -1,0 +1,37 @@
+import React from 'react';
+import AddProduct from './AddProduct';
+
+interface AddProductModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) => {
+  return (
+    <div
+      className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out ${
+        isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      } flex items-center justify-center z-1000`}
+    >
+      <div
+        className={`bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-in-out ${
+          isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+        }`}
+      >
+        <div className="relative">
+          <button
+            onClick={onClose}
+            className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 transition-colors duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <AddProduct onClose={onClose} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AddProductModal; 

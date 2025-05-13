@@ -8,6 +8,7 @@ import { doc, deleteDoc, getFirestore } from "firebase/firestore";
 import { useNavigate } from 'react-router';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import { toast, Toaster } from 'react-hot-toast';
+import AddProductModal from './AddProductModal';
 
 interface Product {
     id: string;
@@ -31,6 +32,7 @@ const ShowProduct: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const navigate = useNavigate();
 
   async function userIsLogged(){
@@ -45,20 +47,20 @@ const ShowProduct: React.FC = () => {
     return user !== null;
   }
 
+  const fetchProducts = async () => {
+    const products = await readProducts();
+    setProducts(products);
+  };
+
   useEffect(() => {
     userIsLogged().then(isLoggedIn => {
       if(isLoggedIn){
-        const fetchProducts = async () => {
-          const products = await readProducts();
-          setProducts(products);
-        };
         fetchProducts();
       }
       else{
         navigate('/login');
       }
     });
-    
   }, []);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,6 +127,11 @@ const ShowProduct: React.FC = () => {
     }
   };
 
+  const handleCloseAddModal = () => {
+    setIsAddProductModalOpen(false);
+    fetchProducts(); // Refresh the product list after closing the modal
+  };
+
   return (
     <div className="p-6 mx-auto w-full">
     <Toaster/>
@@ -138,6 +145,7 @@ const ShowProduct: React.FC = () => {
           )}
         </div>
         <button
+          onClick={() => setIsAddProductModalOpen(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
         >
           <Plus className="text-lg" />
@@ -267,6 +275,11 @@ const ShowProduct: React.FC = () => {
         onConfirm={handleConfirmDelete}
         productName={productToDelete?.nombre || ''}
         isDeleting={isDeleting}
+      />
+
+      <AddProductModal
+        isOpen={isAddProductModalOpen}
+        onClose={handleCloseAddModal}
       />
     </div>
   );

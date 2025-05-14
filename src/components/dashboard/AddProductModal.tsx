@@ -1,12 +1,18 @@
 import React from 'react';
-import AddProduct from './AddProduct';
+import ProductForm from './ProductForm';
+
+interface Product {
+  id: string;
+  [key: string]: any;
+}
 
 interface AddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
+  product?: Product | null;
 }
 
-const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) => {
+const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, product }) => {
   return (
     <div
       className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out ${
@@ -27,7 +33,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <AddProduct onClose={onClose} />
+          {isOpen && <ProductForm key={Date.now()} onClose={onClose} product={product} />}
         </div>
       </div>
     </div>

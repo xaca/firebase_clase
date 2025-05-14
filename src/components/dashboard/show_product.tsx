@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pencil, Trash2, Plus } from 'lucide-react';
+import { Pencil, Trash2, Plus, FolderPlus } from 'lucide-react';
 import readProducts from '../../libs/data/read_product';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import { toast, Toaster } from 'react-hot-toast';
 import AddProductModal from './AddProductModal';
+import AddCategoryModal from './AddCategoryModal';
 
 interface Product {
     id: string;
@@ -33,6 +34,8 @@ const ShowProduct: React.FC = () => {
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const navigate = useNavigate();
 
   async function userIsLogged(){
@@ -129,7 +132,13 @@ const ShowProduct: React.FC = () => {
 
   const handleCloseAddModal = () => {
     setIsAddProductModalOpen(false);
+    setProductToEdit(null);
     fetchProducts(); // Refresh the product list after closing the modal
+  };
+
+  const handleEditClick = (product: Product) => {
+    setProductToEdit(product);
+    setIsAddProductModalOpen(true);
   };
 
   return (
@@ -144,13 +153,22 @@ const ShowProduct: React.FC = () => {
             </span>
           )}
         </div>
-        <button
-          onClick={() => setIsAddProductModalOpen(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="text-lg" />
-          ADD PRODUCT
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setIsAddCategoryModalOpen(true)}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors"
+          >
+            <FolderPlus className="text-lg" />
+            ADD CATEGORY
+          </button>
+          <button
+            onClick={() => setIsAddProductModalOpen(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="text-lg" />
+            ADD PRODUCT
+          </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto bg-white rounded-lg shadow">
@@ -218,7 +236,7 @@ const ShowProduct: React.FC = () => {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {product?.categoria}
+                  {product?.categoriaNombre || product?.categoria}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   ${product.precio}
@@ -233,7 +251,10 @@ const ShowProduct: React.FC = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <div className="flex gap-3">
-                    <button className="text-gray-600 hover:text-blue-600">
+                    <button 
+                      className="text-gray-600 hover:text-blue-600"
+                      onClick={() => handleEditClick(product)}
+                    >
                       <Pencil className="w-5 h-5" />
                     </button>
                     <button 
@@ -280,6 +301,12 @@ const ShowProduct: React.FC = () => {
       <AddProductModal
         isOpen={isAddProductModalOpen}
         onClose={handleCloseAddModal}
+        product={productToEdit}
+      />
+
+      <AddCategoryModal
+        isOpen={isAddCategoryModalOpen}
+        onClose={() => setIsAddCategoryModalOpen(false)}
       />
     </div>
   );

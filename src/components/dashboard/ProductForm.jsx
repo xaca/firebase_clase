@@ -1,29 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { firebaseConfig } from '../../libs/utils/config';
 import { toast } from 'react-hot-toast';
 
-const CATEGORIAS_MAP = {
-  1: 'Electrónicos',
-  2: 'Ropa',
-  3: 'Hogar',
-  4: 'Deportes',
-  5: 'Libros'
+const initialFormState = {
+  nombre: '',
+  url: '',
+  categoria: '',
+  precio: '',
+  cantidad: '',
+  descripcion: '',
+  status: 'In Stock'
 };
 
-const AddProduct = ({ onClose }) => {
-  const [formData, setFormData] = useState({
-    nombre: '',
-    url: '',
-    categoria: '',
-    precio: '',
-    cantidad: '',
-    descripcion: '',
-    status: 'In Stock'
-  });
+const ProductForm = ({ onClose, product = null }) => {
+  const isEditMode = !!product;
 
+  const [formData, setFormData] = useState(initialFormState);
+  const [categories, setCategories] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetchCategories();
+    if (isEditMode && product) {
+      setFormData({
+        nombre: product.nombre || '',
+        url: product.url || '',
+        categoria: product.categoria || '',
+        precio: product.precio?.toString() || '',
+        cantidad: product.cantidad?.toString() || '',
+        descripcion: product.descripcion || '',
+        status: product.status || 'In Stock'
+      });
+    } else {
+      setFormData(initialFormState);
+    }
+  }, [product]);
+
+  const fetchCategories = async () => {
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const categoriesSnapshot = await getDocs(collection(db, "categorias"));
+      const categoriesData = categoriesSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      toast.error('Error al cargar las categorías');
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,28 +71,36 @@ const AddProduct = ({ onClose }) => {
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
-      // Convert numeric fields and prepare data
+      // Find selected category
+      const selectedCategory = categories.find(cat => cat.id === formData.categoria);
+
       const productData = {
         ...formData,
         precio: Number(formData.precio),
         cantidad: Number(formData.cantidad),
-        // Store both numeric ID and name
-        categoria: Number(formData.categoria),
-        categoriaNombre: CATEGORIAS_MAP[formData.categoria]
+        categoria: formData.categoria,
+        categoriaNombre: selectedCategory?.nombre || ''
       };
 
-      await addDoc(collection(db, "productos"), productData);
-      toast.success('Producto agregado exitosamente');
+      if (isEditMode) {
+        // Update existing product
+        const productRef = doc(db, "productos", product.id);
+        await updateDoc(productRef, productData);
+        toast.success('Producto actualizado exitosamente');
+      } else {
+        // Create new product
+        await addDoc(collection(db, "productos"), productData);
+        toast.success('Producto agregado exitosamente');
+      }
+      
       onClose();
     } catch (error) {
-      console.error('Error adding product:', error);
-      toast.error('Error al agregar el producto');
+      console.error('Error saving product:', error);
+      toast.error(isEditMode ? 'Error al actualizar el producto' : 'Error al agregar el producto');
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  const categorias = ['Electrónicos', 'Ropa', 'Hogar', 'Deportes', 'Libros'];
 
   return (
     <div className="p-6 z-1000">
@@ -134,8 +171,8 @@ const AddProduct = ({ onClose }) => {
               className="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Seleccionar Categoría</option>
-              {Object.entries(CATEGORIAS_MAP).map(([id, nombre]) => (
-                <option key={id} value={id}>{nombre}</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>{category.nombre}</option>
               ))}
             </select>
           </div>
@@ -182,7 +219,7 @@ const AddProduct = ({ onClose }) => {
             disabled={isSubmitting}
             className={`px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {isSubmitting ? 'Guardando...' : 'Guardar'}
+            {isSubmitting ? 'Guardando...' : isEditMode ? 'Actualizar' : 'Guardar'}
           </button>
         </div>
       </form>
@@ -190,4 +227,4 @@ const AddProduct = ({ onClose }) => {
   );
 };
 
-export default AddProduct;
+export default ProductForm; 

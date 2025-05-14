@@ -11,7 +11,7 @@ import NotFound from './components/NotFound.tsx'
 import Gallery from './components/products/gallery.tsx'
 import SignOut from './components/auth/signout.tsx'
 import EditProfile from './components/auth/edit_profile.tsx'
-import ShowProduct from './components/dashboard/show_product.tsx'
+import ShowProduct from './components/dashboard/ShowProduct.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>

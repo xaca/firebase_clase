@@ -4,7 +4,7 @@ import readProducts from '../../libs/data/read_product';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../libs/utils/config';
-import { doc, deleteDoc, getFirestore } from "firebase/firestore";
+import { doc, deleteDoc, getFirestore, collection, getDocs } from "firebase/firestore";
 import { useNavigate } from 'react-router';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import { toast, Toaster } from 'react-hot-toast';
@@ -15,21 +15,19 @@ interface Product {
     id: string;
     [key: string]: any;
 }
-/*interface Product {
+
+interface Category {
   id: string;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  status: 'In Stock' | 'Low Stock' | 'Out of Stock';
-  image: string;
-}*/
-
-
+  nombre: string;
+  descripcion: string;
+}
 
 const ShowProduct: React.FC = () => {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -55,16 +53,41 @@ const ShowProduct: React.FC = () => {
     setProducts(products);
   };
 
+  const fetchCategories = async () => {
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const categoriesSnapshot = await getDocs(collection(db, "categorias"));
+      const categoriesData = categoriesSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Category[];
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      toast.error('Error al cargar las categorías');
+    }
+  };
+
   useEffect(() => {
     userIsLogged().then(isLoggedIn => {
       if(isLoggedIn){
         fetchProducts();
+        fetchCategories();
       }
       else{
         navigate('/login');
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (selectedCategory === 'all') {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(products.filter(product => product.categoria === selectedCategory));
+    }
+  }, [selectedCategory, products]);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -152,6 +175,20 @@ const ShowProduct: React.FC = () => {
               {selectedProducts.length} Selected
             </span>
           )}
+          <div className="ml-4">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All Categories</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="flex gap-3">
           <button
@@ -204,7 +241,7 @@ const ShowProduct: React.FC = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {products.map((product,index) => (
+            {filteredProducts.map((product,index) => (
               <tr
                 key={index}
                 className={`${
@@ -272,7 +309,7 @@ const ShowProduct: React.FC = () => {
         
         <div className="px-6 py-4 flex items-center justify-between border-t border-gray-200">
           <div className="text-sm text-gray-700">
-            Showing 1 - {products.length} of {products.length}
+            Showing 1 - {filteredProducts.length} of {filteredProducts.length}
           </div>
           <div className="flex gap-2">
             <button className="px-3 py-1 border rounded-md hover:bg-gray-50">

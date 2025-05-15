@@ -10,6 +10,8 @@ import DeleteConfirmationModal from './DeleteConfirmationModal';
 import { toast, Toaster } from 'react-hot-toast';
 import AddProductModal from './AddProductModal';
 import AddCategoryModal from './AddCategoryModal';
+import readUser from '../../libs/data/read_user';
+import { userInfo } from 'os';
 
 interface Product {
     id: string;
@@ -37,18 +39,20 @@ const ShowProduct: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [lastKnownPage, setLastKnownPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const navigate = useNavigate();
 
   async function userIsLogged(){
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     await auth.authStateReady();
-    /*onAuthStateChanged(auth, async (user) => {
-        setIsLoggedIn(user !== null);
-    });*/
     
     const user = auth.currentUser;
-    return user !== null;
+    if (!user?.uid) return false;
+    const userInfo = await readUser(user.uid);
+    setIsAdmin(userInfo?.role === "admin");
+    return isAdmin;
   }
 
   const fetchProducts = async () => {
@@ -188,7 +192,8 @@ const ShowProduct: React.FC = () => {
   };
 
   return (
-    <div className="p-6 mx-auto w-full">
+    isAdmin
+    && (<div className="p-6 mx-auto w-full">
     <Toaster/>
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
@@ -416,7 +421,7 @@ const ShowProduct: React.FC = () => {
         onClose={() => setIsAddCategoryModalOpen(false)}
       />
     </div>
-  );
+  ))
 };
 
 export default ShowProduct;

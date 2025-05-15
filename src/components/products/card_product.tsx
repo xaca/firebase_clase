@@ -1,4 +1,11 @@
+import { useCartStore } from "@/store";
+import { Product } from "@/types/product";
+
 export default function CardProduct({product}:{product:any}){
+    const {addProduct} = useCartStore();
+    const addToCart = (product:Product) => {
+        addProduct(product);
+    }
     return(
         <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300 max-w-sm">
             {/* Product Image */}
@@ -21,7 +28,8 @@ export default function CardProduct({product}:{product:any}){
             </h2>
             
             {/* Price Section */}
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex flex-col mb-2">
+                <div>
                 <span className="text-2xl font-bold">
                     ${new Intl.NumberFormat('es-CO').format(product.precio)}
                 </span>
@@ -30,6 +38,12 @@ export default function CardProduct({product}:{product:any}){
                         {product.descuento}% OFF
                     </span>
                 )}
+                </div>
+                <div className="mt-4" onClick={() => addToCart(product)}    >
+                    <button className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md">
+                        Agregar
+                    </button>
+                </div>
             </div>
             
             {/* Payment Info */}

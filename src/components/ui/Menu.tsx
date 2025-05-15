@@ -6,12 +6,16 @@ import { firebaseConfig } from "../../libs/utils/config";
 import readUser from "../../libs/data/read_user";
 import Profile from "../auth/profile";
 import { UserInfo } from "../../libs/data/user_info";
+import { ShoppingCart } from 'lucide-react';
+import { useCartStore } from "@/store";
 import 'animate.css';
 
 export default function Menu(){
     const [userInfo,setUserInfo] = useState<UserInfo | null>(null);
     const [isLoggedIn,setIsLoggedIn] = useState(false);
     const [isProfileOpen,setIsProfileOpen] = useState(false);
+    const {products} = useCartStore();
+
     useEffect(() => {
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
@@ -23,9 +27,15 @@ export default function Menu(){
           }
       });
       
-      return () => unsubscribe(); // Cleanup subscription on unmount
+      return () =>{
+        unsubscribe();
+      }  // Cleanup subscription on unmount
     }, []);  
 
+    useEffect(() => {
+      console.log(products);
+    }, [products]);
+    
     const handleProfileClick = () => {
       const profile = document.getElementById("profile");
       profile?.classList.remove("hidden");
@@ -49,6 +59,14 @@ export default function Menu(){
           <NavLink to="/" className="ml-4 mr-4">
             Home
           </NavLink>
+          <NavLink to="/gallery" className="ml-4 mr-4">
+            Galería
+          </NavLink>
+          {(isLoggedIn && userInfo?.role === "admin") && (
+            <NavLink to="/dashboard" className="ml-4 mr-4">
+              Dashboard
+            </NavLink>
+          )}
           {!isLoggedIn && (
             <NavLink to="/login" className="mr-4">
               Login
@@ -60,11 +78,16 @@ export default function Menu(){
             </NavLink>
           )}          
         </div>
+        <div className="flex items-center gap-2">
+          <button className="relative mr-4 cursor-pointer">
+            <ShoppingCart />
+            <span className="absolute top-1 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{products.length}</span>
+          </button>
+       
         {isLoggedIn && (
-          <div>
             <button className="mr-4 cursor-pointer" onClick={handleProfileClick}>Profile</button>
-          </div>
-        )}
+          )}
+        </div>
       </nav>
       </>
     );

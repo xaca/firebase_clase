@@ -1,11 +1,24 @@
 # TODO
 
-- Definir los roles de administrador y editor
-- Controlar enrutamiento para entrar al dashboard
-- Mostrar los productos en la galeria
-- Agregar productos al carrito
-- Previsualizar carrito
+- Definir los roles de administrador y editor (ok)
+- Si el usuario no es admin pero esta logeado llevar a galeria (ok)
+- Controlar enrutamiento para entrar al dashboard (ok)
+- Cuando el usuario se logea, llevarlo a la galeria, pero sin parametro (ok)
+- Ajustar la ventana del perfil, que debe aparecer por encima de todo (ok)
+- Mostrar los productos en la galeria (ok)
+- Agregar productos al carrito (ok)
+- Previsualizar carrito (ok)
+- Loading a galeria mientras carga
 - Checkout/Pago del carrito
 - Al pagar, actualización del inventario  
 - Generación de orden de despacho
 - Subir la imagen del producto a firestorage
+- Ajustar fondo azul en secciones como carrito (ok)
+- Generar un pdf usando un encabezado para imprimir
+- Ajustar cantidad (ok)
+- Agregar historial de compras del usuario
+- Agregar historial de carrito abandonado
+- Controlar estado de inventario cuando se acaban los productos
+- Integrar productos similares en el carrito, para que se actualice la cantidad y no quede repetido
+- Ajustar responsive en tablet a dos columnas y menor tamaño
+- Totalizar el contador del carrito, con el total de elementos

@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
-
+import Menu from '../ui/Menu.tsx'
 export default function LayoutGuest({children}: {children: ReactNode})
 {
-    return(<section className="w-full h-full w-screen h-screen flex bg-gradient-to-br from-blue-50 to-blue-100">    
+    return(<section className="w-full min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+        <Menu />
         {children}
     </section>);
 }

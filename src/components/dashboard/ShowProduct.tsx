@@ -49,10 +49,10 @@ const ShowProduct: React.FC = () => {
     await auth.authStateReady();
     
     const user = auth.currentUser;
-    if (!user?.uid) return false;
+    if (!user?.uid) return null;
     const userInfo = await readUser(user.uid);
     setIsAdmin(userInfo?.role === "admin");
-    return isAdmin;
+    return userInfo;
   }
 
   const fetchProducts = async () => {
@@ -77,15 +77,21 @@ const ShowProduct: React.FC = () => {
   };
 
   useEffect(() => {
-    userIsLogged().then(isLoggedIn => {
-      if(isLoggedIn){
-        fetchProducts();
-        fetchCategories();
+    (async()=>{
+      const user = await userIsLogged();
+      if(user){
+        if(user.role === "admin"){
+          fetchProducts();
+          fetchCategories();
+        }
+        else{
+          navigate('/');
+        }
       }
       else{
         navigate('/login');
       }
-    });
+    })();          
   }, []);
 
   useEffect(() => {

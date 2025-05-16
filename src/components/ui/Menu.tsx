@@ -1,7 +1,7 @@
 import { useEffect,useState } from "react";
 import { initializeApp } from "firebase/app"; 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { firebaseConfig } from "../../libs/utils/config";
 import readUser from "../../libs/data/read_user";
 import Profile from "../auth/profile";
@@ -14,6 +14,7 @@ export default function Menu(){
     const [userInfo,setUserInfo] = useState<UserInfo | null>(null);
     const [isLoggedIn,setIsLoggedIn] = useState(false);
     const [isProfileOpen,setIsProfileOpen] = useState(false);
+    const navigate = useNavigate();
     const {products} = useCartStore();
 
     useEffect(() => {
@@ -52,6 +53,14 @@ export default function Menu(){
       setIsProfileOpen(!isProfileOpen);
     };
 
+    const abrirCarrito = () => {
+      navigate("/shoping_cart");
+    }
+
+    const calcularTotal = () => {
+      return products.reduce((acc, product) => acc + product.cantidad, 0);
+    }
+
     return (<>
       {userInfo && <Profile userInfo={userInfo} onClose={() => setIsProfileOpen(false)}  />}
       <nav className="flex justify-between h-[30px] mt-2 sticky top-0 bg-white z-100">
@@ -79,9 +88,9 @@ export default function Menu(){
           )}          
         </div>
         <div className="flex items-center gap-2">
-          <button className="relative mr-4 cursor-pointer">
+          <button className="relative mr-4 cursor-pointer" onClick={abrirCarrito}>
             <ShoppingCart />
-            <span className="absolute top-1 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{products.length}</span>
+            <span className="absolute top-1 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">{calcularTotal()}</span>
           </button>
        
         {isLoggedIn && (

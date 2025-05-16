@@ -1,13 +1,54 @@
 import { useCartStore } from "@/store";
 import { Product } from "@/types/product";
+import { Plus, Minus } from 'lucide-react';
+import { useState } from "react";
+import {Toaster,toast} from "react-hot-toast";
 
 export default function CardProduct({product}:{product:any}){
-    const {addProduct} = useCartStore();
+    const {products,addProduct,updateProduct} = useCartStore();
+    const [cantidad, setCantidad] = useState(0);
+    
     const addToCart = (product:Product) => {
-        addProduct(product);
+        if(cantidad > 0){
+            product.cantidad = cantidad;
+            
+            const productExistente = products.find(p => p.id === product.id);
+           
+            if(productExistente){
+                productExistente.cantidad = productExistente.cantidad+cantidad;
+                updateProduct(productExistente);
+            }
+            else{
+                addProduct(product);
+            }
+           
+            setCantidad(0);
+            toast.success("Producto agregado al carrito");
+        }
+        else{
+            toast.error("Debe seleccionar como minimo un producto");
+        }
+    }
+    const restarCantidad = () => {
+        if(cantidad - 1 >= 0){
+            setCantidad(cantidad - 1);
+        }
+        else{
+            toast.error("La cantidad debe ser mayor o igual a 1");
+        }
+    }
+    const sumarCantidad = () => {
+        if(cantidad + 1 <= product.cantidad){
+            setCantidad(cantidad + 1);
+        }
+        else{
+            toast.error("No hay más productos disponibles");
+        }
+
     }
     return(
         <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300 max-w-sm">
+            <Toaster />
             {/* Product Image */}
             <div className="relative aspect-square mb-4">
                 <img 
@@ -39,10 +80,17 @@ export default function CardProduct({product}:{product:any}){
                     </span>
                 )}
                 </div>
+                <div className="mt-4 flex items-center gap-2">
                 <div className="mt-4" onClick={() => addToCart(product)}    >
                     <button className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md">
                         Agregar
                     </button>
+                </div>
+                <div className="mt-4 flex items-center gap-2">
+                    <Minus onClick={restarCantidad} className="cursor-pointer text-gray-500 rounded-md border-2 border-black" />
+                    <input className="w-5 text-center" type="text" readOnly value={cantidad} name="cantidad" id="cantidad" />
+                    <Plus onClick={sumarCantidad} className="cursor-pointer text-gray-500 rounded-md border-2 border-black" />
+                </div>
                 </div>
             </div>
             

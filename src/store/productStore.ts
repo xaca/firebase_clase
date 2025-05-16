@@ -8,6 +8,7 @@ interface CartState {
 
 interface CartActions {
   addProduct: (product: Product) => void;
+  updateProduct: (product: Product) => void;
   removeProduct: (productId: string) => void;
   clearCart: () => void;
   updateTotal: () => void;
@@ -20,6 +21,13 @@ export const useCartStore = create<CartState & CartActions>((set, get) => ({
   addProduct: (product: Product) => {
     set((state) => ({
       products: [...state.products, product]
+    }));
+    get().updateTotal();
+  },
+
+  updateProduct: (product: Product) => {
+    set((state) => ({
+      products: state.products.map((p) => p.id === product.id ? product : p)
     }));
     get().updateTotal();
   },

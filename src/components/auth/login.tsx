@@ -62,7 +62,8 @@ export default function Login() {
           console.log("User UID:", uid); // Log the user's uid
           toast.success('Successfully toasted!')
           setTimeout(()=>{
-            navigate(`/gallery/${uid}`);
+            //navigate(`/gallery/${uid}`);
+            navigate(`/gallery/`);
           },1000);
         })
         .catch((error: string) => {

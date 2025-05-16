@@ -38,7 +38,7 @@ export default function Profile({
     }
 
     return (
-        <div id="profile" className={`absolute top-12 right-5 max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden md:max-w-md animate__animated hidden`}>
+        <div id="profile" className={`absolute top-12 right-5 max-w-sm mx-auto bg-white shadow-md rounded-lg overflow-hidden md:max-w-md animate__animated hidden z-10`}>
             <div className="md:flex">
                 <div className="w-full p-4">
                     <div className="flex justify-between items-center">

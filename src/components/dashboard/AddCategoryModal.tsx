@@ -2,7 +2,7 @@ import React from 'react';
 import AddCategory from './AddCategory';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import { firebaseConfig } from '../../libs/utils/config';
+import { firebaseConfig } from '../../lib/xaca/utils/config';
 import { toast } from 'react-hot-toast';
 
 interface AddCategoryModalProps {

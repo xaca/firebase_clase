@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc } from 'firebase/firestore';
-import { firebaseConfig } from '../../libs/utils/config';
+import { firebaseConfig } from "@/lib/xaca/utils/index";
 import { toast } from 'react-hot-toast';
 
 const initialFormState = {

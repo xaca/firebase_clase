@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Pencil, Trash2, Plus, FolderPlus } from 'lucide-react';
-import readProducts from '../../libs/data/read_product';
+import readProducts from '../../lib/xaca/data/read_product';
 import { getAuth } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '../../libs/utils/config';
+import { firebaseConfig } from '../../lib/xaca/utils/config';
 import { doc, deleteDoc, getFirestore, collection, getDocs } from "firebase/firestore";
 import { useNavigate } from 'react-router';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import { toast, Toaster } from 'react-hot-toast';
 import AddProductModal from './AddProductModal';
 import AddCategoryModal from './AddCategoryModal';
-import readUser from '../../libs/data/read_user';
+import readUser from '../../lib/xaca/data/read_user';
 import { userInfo } from 'os';
 
 interface Product {

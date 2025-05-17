@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { firebaseConfig } from "../../libs/utils/config";
+import { firebaseConfig } from "../../lib/xaca/utils/config";
 import React, { useState } from 'react';
 import { toast,Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router";

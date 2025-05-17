@@ -80,6 +80,7 @@ export default function CardProduct({product}:{product:any}){
                     </span>
                 )}
                 </div>
+                <div>Inventario: {product.cantidad}</div>
                 <div className="mt-4 flex items-center gap-2">
                 <div className="mt-4" onClick={() => addToCart(product)}    >
                     <button className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md">

@@ -1,7 +1,7 @@
 //import { useParams } from "react-router";
 import { useEffect,useState } from "react";
-import { ProductInfo } from "../../libs/data/product_info";
-import readProducts from "../../libs/data/read_product";
+import { Product } from "@/types/product";
+import readProducts from "../../lib/xaca/data/read_product";
 import CardProduct from "./card_product";
 
 export default function Gallery(){
@@ -50,12 +50,12 @@ export default function Gallery(){
             cantidad:5
         }
     ]
-    const [products,setProducts] = useState<ProductInfo[]>([]);
+    const [products,setProducts] = useState<Product[]>([]);
     useEffect(()=> {
         (async () => {
             const products = await readProducts();
             console.log(products);
-            setProducts(products as ProductInfo[]);
+            setProducts(products as Product[]);
         })();
     }, []);
     return(<section className="w-full h-full justify-center mt-4 p-6">

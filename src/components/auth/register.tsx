@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { firebaseConfig } from '../../libs/utils/config';
+import { firebaseConfig } from '../../lib/xaca/utils/config';
 import { initializeApp } from 'firebase/app';
 import { getAuth,createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, setDoc, doc } from "firebase/firestore"; 

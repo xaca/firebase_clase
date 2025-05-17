@@ -1,4 +1,4 @@
-import { firebaseConfig } from "../../libs/utils/config";
+import { firebaseConfig } from "../../lib/xaca/utils/config";
 import { initializeApp } from "firebase/app";
 import { getAuth,signOut} from "firebase/auth";
 import { useEffect,useState } from "react";

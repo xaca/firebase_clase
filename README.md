@@ -22,3 +22,4 @@
 - Integrar productos similares en el carrito, para que se actualice la cantidad y no quede repetido
 - Ajustar responsive en tablet a dos columnas y menor tamaño
 - Totalizar el contador del carrito, con el total de elementos
+- Controlar agregar productos al inventario segun la cantidad disponible

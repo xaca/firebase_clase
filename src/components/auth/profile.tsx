@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { UserInfo } from '../../libs/data/user_info';
+import { UserInfo } from '../../lib/xaca/data/user_info';
 import { useEffect } from 'react';
 
 export default function Profile({  

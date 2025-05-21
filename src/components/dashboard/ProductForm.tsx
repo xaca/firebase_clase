@@ -6,6 +6,8 @@ import { toast } from 'react-hot-toast';
 import { InputImage } from "@/components/ui";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
+import { UploadImageResponse } from "@/types/upload_image_response";
+import { uploadImage } from "@/lib/xaca/utils/images_storage";
 
 const initialFormState = {
   name: '',
@@ -67,6 +69,14 @@ const ProductForm = ({ onClose, product = null }: { onClose: () => void, product
     }));
   };
 
+  function compareProducts(product1: Product, product2: any){
+    return product1.name === product2.name &&
+      product1.price === product2.price &&
+      product1.quantity === product2.quantity &&
+      product1.category === product2.category &&
+      product1.description === product2.description;
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -89,15 +99,47 @@ const ProductForm = ({ onClose, product = null }: { onClose: () => void, product
 
       if (isEditMode) {
         // Update existing product
-        const productRef = doc(db, "productos", product.id);
-        await updateDoc(productRef, productData);
-        toast.success('Producto actualizado exitosamente');
+        if(!compareProducts(product, productData) || fileInputRef?.current?.files?.length){
+          if(fileInputRef?.current?.files?.length){
+            let urlImage: UploadImageResponse = { error: false, data: formData.url };
+            urlImage = await uploadImage(fileInputRef, 'images/products');
+            if(!urlImage.error && urlImage.data){
+              productData.url = urlImage.data;              
+            }
+            else{
+              toast.error('Error al agregar la imagen del producto');
+              return;
+            }
+          }
+
+          const productRef = doc(db, "productos", product.id);
+          await updateDoc(productRef, productData);
+          toast.success('Producto actualizado exitosamente');
+        }
+        else{
+          toast("No se realizó ningún cambio",{icon:'🤷'});
+        }
+        
       } else {
         // Create new product
-        await addDoc(collection(db, "productos"), productData);
-        toast.success('Producto agregado exitosamente');
+        let urlImage: UploadImageResponse = { error: false, data: formData.url };
+        if (fileInputRef?.current?.files?.length) {        
+          urlImage = await uploadImage(fileInputRef, 'images/products');
+        }
+        else{
+          toast.error('Falta la imagen del producto');
+          return;
+        }        
+        if (!urlImage.error && urlImage.data) {
+          productData.url = urlImage.data;
+        } 
+        if (productData.url) {
+          await addDoc(collection(db, "productos"), productData);
+          toast.success('Producto agregado exitosamente');
+        } else {
+          toast.error('Error al agregar el producto');
+        }
       }
-      
       onClose();
     } catch (error) {
       console.error('Error saving product:', error);

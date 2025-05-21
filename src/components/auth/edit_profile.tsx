@@ -5,40 +5,11 @@ import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { InputImage } from "@/components/ui";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 as uuidv4 } from 'uuid';
 import { getAuth } from 'firebase/auth';
 import readUser from '../../lib/xaca/data/read_user';
 import { UserInfo } from '@/types/user_info';
-
-/*
- const urlImage = await uploadImage() as UploadImageResponse;
-            if (!urlImage.error && urlImage.data) {
-                formData.avatar = urlImage.data;
-            } else {
-                // More specific error message based on the error type
-                const errorMessage = urlImage.message || "Error al subir imagen";
-                if (typeof errorMessage === 'string' && errorMessage.includes("No file selected")) {
-                    toast.error("Por favor seleccione una imagen");
-                } else if (typeof errorMessage === 'string' && errorMessage.includes("storage/unauthorized")) {
-                    toast.error("No tiene permisos para subir imágenes");
-                } else if (typeof errorMessage === 'string' && errorMessage.includes("storage/canceled")) {
-                    toast.error("La subida de la imagen fue cancelada");
-                } else if (typeof errorMessage === 'string' && errorMessage.includes("storage/retry-limit-exceeded")) {
-                    toast.error("Error de conexión. Por favor intente nuevamente");
-                } else {
-                    toast.error("Error al subir imagen: " + (typeof errorMessage === 'string' ? errorMessage : "Error desconocido"));
-                }
-                setIsLoading(false);
-                return;
-            }
-*/
-
-interface UploadImageResponse {
-    error: boolean;
-    data?: string;
-    message?: string;
-}
+import { UploadImageResponse } from '@/types/upload_image_response';
+import { uploadImage } from '@/lib/xaca/utils/images_storage';
 
 export default function EditProfile() {
     const navigate = useNavigate();
@@ -219,7 +190,7 @@ export default function EditProfile() {
             setIsLoading(true);
             let urlImage: UploadImageResponse = { error: false, data: formData.avatar };
             if (fileInputRef?.current?.files?.length) {
-                urlImage = await uploadImage();
+                urlImage = await uploadImage(fileInputRef, 'images/users');
             }
             if (!urlImage.error && urlImage.data) {
                 formData.avatar = urlImage.data;
@@ -253,28 +224,6 @@ export default function EditProfile() {
         }
     };
 
-
-    function uploadImage(): Promise<UploadImageResponse> {
-        return new Promise((resolve: (value: UploadImageResponse) => void, reject: (reason: UploadImageResponse) => void) => {
-            if (!fileInputRef?.current?.files?.length) {
-                reject({error: true, message: "No file selected"});
-                return;
-            }
-            
-            const app = initializeApp(firebaseConfig);
-            const storageRef = ref(getStorage(app),`images/users/${uuidv4()}`);
-            const file = fileInputRef?.current?.files?.[0];
-            
-            uploadBytes(storageRef, file).then((snapshot) => {
-                getDownloadURL(snapshot.ref).
-                then((downloadURL) => {
-                    resolve({error:false,data:downloadURL});
-                });
-            }).catch((error) => {
-                reject({error:true,message:error});
-            });
-        });        
-    }
     return (
         <div className="w-full min-h-[660px] flex justify-center items-center p-2 md:p-4">
             <Toaster />
@@ -394,7 +343,8 @@ export default function EditProfile() {
                                     correo: '',
                                     password: '',
                                     confirmPassword: '',
-                                    avatar: ''
+                                    avatar: '',
+                                    role: ''
                                 }); 
                                 setErrors({
                                     nombre: '',

@@ -297,7 +297,7 @@ import { Category } from '@/types/category';
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {product?.category}
+                    {product?.categoryName}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   ${product.price}

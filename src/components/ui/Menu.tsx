@@ -58,7 +58,7 @@ export default function Menu(){
     }
 
     const calcularTotal = () => {
-      return products.reduce((acc, product) => acc + product.cantidad, 0);
+      return products.reduce((acc, product) => acc + product.quantity, 0);
     }
 
     return (<>

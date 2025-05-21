@@ -6,7 +6,7 @@ export default function ShopingCart() {
         removeProduct(id);
     }
     function total() {
-        const total = products.reduce((acc, product) => acc + product.precio * product.cantidad, 0);
+        const total = products.reduce((acc, product) => acc + product.price * product.quantity, 0);
         return total;
     }
     return(<><section className="overflow-x-hidden w-full h-full">
@@ -25,11 +25,11 @@ export default function ShopingCart() {
             {products.map((product) => (
                 <tr key={product.id}>
                     <td>
-                        <img className="w-16 h-16" src={product.url} alt={product.nombre} />
+                        <img className="w-16 h-16" src={product.url} alt={product.name} />
                     </td>
-                    <td>{product.nombre}</td>
-                    <td>{product.precio}</td>
-                    <td>{product.cantidad}</td>
+                    <td>{product.name}</td>
+                    <td>{product.price}</td>
+                    <td>{product.quantity}</td>
                     <td>
                         <button onClick={() => eliminarProducto(product.id)}>Eliminar</button>
                     </td>

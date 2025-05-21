@@ -1,1 +1,1 @@
-export {firebaseConfig} from "./config.ts";
+export {firebaseConfig, firebaseStorage} from "./config.ts";

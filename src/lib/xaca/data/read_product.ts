@@ -1,11 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { firebaseConfig } from "../utils/config";
-
-interface Product {
-    id: string;
-    [key: string]: any;
-}
+import { Product } from "@/types/product";
 
 export default async function readProducts(): Promise<Product[]> {
     const app = initializeApp(firebaseConfig);
@@ -14,7 +10,7 @@ export default async function readProducts(): Promise<Product[]> {
     
     const products: Product[] = [];
     querySnapshot.forEach((doc) => {
-        products.push({ id: doc.id, ...doc.data() });
+        products.push({ id: doc.id, ...doc.data() } as Product);
     });
     
     return products;

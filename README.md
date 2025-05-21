@@ -12,10 +12,13 @@
 - Checkout/Pago del carrito
 - Al pagar, actualización del inventario  
 - Generación de orden de despacho
+- Subir imagen del usuario en editar perfil (ok)
 - Subir la imagen del producto a firestorage
+- Subir imagenes asociadas del producto
 - Ajustar fondo azul en secciones como carrito (ok)
 - Generar un pdf usando un encabezado para imprimir
 - Ajustar cantidad (ok)
+- Ver Detalle producto
 - Agregar historial de compras del usuario
 - Agregar historial de carrito abandonado
 - Controlar estado de inventario cuando se acaban los productos
@@ -23,3 +26,5 @@
 - Ajustar responsive en tablet a dos columnas y menor tamaño
 - Totalizar el contador del carrito, con el total de elementos
 - Controlar agregar productos al inventario segun la cantidad disponible
+- Actualizar el perfil cuando se actualiza la información del usuario
+- Crear sección para administrar roles de usuario

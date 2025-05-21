@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Pencil, Trash2, Plus, FolderPlus } from 'lucide-react';
 import readProducts from '../../lib/xaca/data/read_product';
 import { getAuth } from 'firebase/auth';
@@ -11,20 +11,10 @@ import { toast, Toaster } from 'react-hot-toast';
 import AddProductModal from './AddProductModal';
 import AddCategoryModal from './AddCategoryModal';
 import readUser from '../../lib/xaca/data/read_user';
-import { userInfo } from 'os';
+import { Product } from '@/types/product';
+import { Category } from '@/types/category';
 
-interface Product {
-    id: string;
-    [key: string]: any;
-}
-
-interface Category {
-  id: string;
-  nombre: string;
-  descripcion: string;
-}
-
-const ShowProduct: React.FC = () => {
+  export default function ShowProduct() {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -56,7 +46,7 @@ const ShowProduct: React.FC = () => {
   }
 
   const fetchProducts = async () => {
-    const products = await readProducts();
+    const products: Product[] = await readProducts();
     setProducts(products);
   };
 
@@ -98,7 +88,7 @@ const ShowProduct: React.FC = () => {
     if (selectedCategory === 'all') {
       setFilteredProducts(products);
     } else {
-      setFilteredProducts(products.filter(product => product.categoria === selectedCategory));
+      setFilteredProducts(products.filter(product => product.category === selectedCategory));
     }
     if (selectedCategory !== 'all') {
       setCurrentPage(1);
@@ -218,7 +208,7 @@ const ShowProduct: React.FC = () => {
               <option value="all">All Categories</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
-                  {category.nombre}
+                  {category.name}
                 </option>
               ))}
             </select>
@@ -296,24 +286,24 @@ const ShowProduct: React.FC = () => {
                       <img
                         className="h-10 w-10 rounded-full object-cover"
                         src={product.url}
-                        alt={product.nombre}
+                        alt={product.name}
                       />
                     </div>
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {product.nombre}
+                        {product.name}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {product?.categoriaNombre || product?.categoria}
+                    {product?.category}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  ${product.precio}
+                  ${product.price}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {product.cantidad}
+                  {product.quantity}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-3 py-1 rounded-full text-xs ${getStatusColor(product.status)}`}>
@@ -412,7 +402,7 @@ const ShowProduct: React.FC = () => {
           }
         }}
         onConfirm={handleConfirmDelete}
-        productName={productToDelete?.nombre || ''}
+        productName={productToDelete?.name || ''}
         isDeleting={isDeleting}
       />
 
@@ -429,5 +419,3 @@ const ShowProduct: React.FC = () => {
     </div>
   ))
 };
-
-export default ShowProduct;

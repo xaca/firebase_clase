@@ -5,4 +5,5 @@ export interface UserInfo {
     nombre: string;
     celular: string;
     role: string;
+    avatar: string;
 }

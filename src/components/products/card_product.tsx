@@ -10,12 +10,12 @@ export default function CardProduct({product}:{product:any}){
     
     const addToCart = (product:Product) => {
         if(cantidad > 0){
-            product.cantidad = cantidad;
+            product.quantity = cantidad;
             
             const productExistente = products.find(p => p.id === product.id);
            
             if(productExistente){
-                productExistente.cantidad = productExistente.cantidad+cantidad;
+                productExistente.quantity = productExistente.quantity+cantidad;
                 updateProduct(productExistente);
             }
             else{
@@ -38,7 +38,7 @@ export default function CardProduct({product}:{product:any}){
         }
     }
     const sumarCantidad = () => {
-        if(cantidad + 1 <= product.cantidad){
+        if(cantidad + 1 <= product.quantity){
             setCantidad(cantidad + 1);
         }
         else{
@@ -53,34 +53,29 @@ export default function CardProduct({product}:{product:any}){
             <div className="relative aspect-square mb-4">
                 <img 
                     src={product.url} 
-                    alt={product.nombre}
+                    alt={product.name}
                     className="w-full h-full object-contain"
                 />
             </div>
-            
-            {/* Brand */}
-            <div className="text-gray-600 font-semibold uppercase text-sm mb-1">
-                {product.marca}
-            </div>
-            
+                    
             {/* Product Name */}
             <h2 className="text-gray-800 font-medium text-lg mb-3 line-clamp-2">
-                {product.nombre}
+                {product.name}
             </h2>
             
             {/* Price Section */}
             <div className="flex flex-col mb-2">
                 <div>
                 <span className="text-2xl font-bold">
-                    ${new Intl.NumberFormat('es-CO').format(product.precio)}
+                    ${new Intl.NumberFormat('es-CO').format(product.price)}
                 </span>
-                {product.descuento && (
+                {/*product.discount && (
                     <span className="text-green-500 font-medium">
-                        {product.descuento}% OFF
+                        {product.discount}% OFF
                     </span>
-                )}
+                )}*/}
                 </div>
-                <div>Inventario: {product.cantidad}</div>
+                <div>Inventario: {product.quantity}</div>
                 <div className="mt-4 flex items-center gap-2">
                 <div className="mt-4" onClick={() => addToCart(product)}    >
                     <button className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md">
@@ -96,18 +91,18 @@ export default function CardProduct({product}:{product:any}){
             </div>
             
             {/* Payment Info */}
-            {product.cuotas && (
+            {/*product.cuotas && (
                 <p className="text-gray-600 text-sm mb-3">
                     en {product.cuotas.cantidad} cuotas de ${new Intl.NumberFormat('es-CO').format(product.cuotas.valor)} {product.cuotas.interes}
                 </p>
-            )}
+            )}*/}
             
             {/* Free Shipping */}
-            {product.envioGratis && (
+            {/*product.envioGratis && (
                 <div className="text-green-500 text-sm font-medium">
                     Envío gratis
                 </div>
-            )}
+            )*/}
         </div>
     )
 }

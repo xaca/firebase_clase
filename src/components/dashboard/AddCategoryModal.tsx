@@ -17,8 +17,8 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ isOpen, onClose }) 
       const db = getFirestore(app);
       
       await addDoc(collection(db, 'categorias'), {
-        nombre: categoryData.name,
-        descripcion: categoryData.description,
+        name: categoryData.name,
+        description: categoryData.description,
         createdAt: new Date()
       });
 

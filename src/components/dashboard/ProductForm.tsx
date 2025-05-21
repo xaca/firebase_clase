@@ -1,36 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { firebaseConfig } from "@/lib/xaca/utils/index";
 import { toast } from 'react-hot-toast';
+import { InputImage } from "@/components/ui";
+import { Product } from "@/types/product";
+import { Category } from "@/types/category";
 
 const initialFormState = {
-  nombre: '',
+  name: '',
   url: '',
-  categoria: '',
-  precio: '',
-  cantidad: '',
-  descripcion: '',
+  category: '',
+  price: '',
+  quantity: '',
+  description: '',
   status: 'In Stock'
 };
 
-const ProductForm = ({ onClose, product = null }) => {
+const ProductForm = ({ onClose, product = null }: { onClose: () => void, product: Product | null }) => {
   const isEditMode = !!product;
-
   const [formData, setFormData] = useState(initialFormState);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null) as React.RefObject<HTMLInputElement> | null;
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchCategories();
     if (isEditMode && product) {
       setFormData({
-        nombre: product.nombre || '',
+        name: product.name || '',
         url: product.url || '',
-        categoria: product.categoria || '',
-        precio: product.precio?.toString() || '',
-        cantidad: product.cantidad?.toString() || '',
-        descripcion: product.descripcion || '',
+        category: product.category || '',
+        price: product.price?.toString() || '',
+        quantity: product.quantity?.toString() || '',
+        description: product.description || '',
         status: product.status || 'In Stock'
       });
     } else {
@@ -45,7 +48,9 @@ const ProductForm = ({ onClose, product = null }) => {
       const categoriesSnapshot = await getDocs(collection(db, "categorias"));
       const categoriesData = categoriesSnapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()
+        name: doc.data().name,
+        description: doc.data().description,
+        status: doc.data().status
       }));
       setCategories(categoriesData);
     } catch (error) {
@@ -54,7 +59,7 @@ const ProductForm = ({ onClose, product = null }) => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
@@ -62,7 +67,7 @@ const ProductForm = ({ onClose, product = null }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return;
 
@@ -72,14 +77,14 @@ const ProductForm = ({ onClose, product = null }) => {
       const db = getFirestore(app);
 
       // Find selected category
-      const selectedCategory = categories.find(cat => cat.id === formData.categoria);
+      const selectedCategory = categories.find(cat => cat.id === formData.category);
 
       const productData = {
         ...formData,
-        precio: Number(formData.precio),
-        cantidad: Number(formData.cantidad),
-        categoria: formData.categoria,
-        categoriaNombre: selectedCategory?.nombre || ''
+        price: Number(formData.price),
+        quantity: Number(formData.quantity),
+        category: formData.category,
+        categoryName: selectedCategory?.name || ''
       };
 
       if (isEditMode) {
@@ -106,13 +111,16 @@ const ProductForm = ({ onClose, product = null }) => {
     <div className="p-6 z-1000">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+            <InputImage fileInputRef={fileInputRef} initialImage={formData.url} />
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
             <input
               type="text"
-              name="nombre"
+              name="name"
               required
-              value={formData.nombre}
+              value={formData.name}
               onChange={handleChange}
               placeholder="Nombre del producto"
               className="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -123,26 +131,13 @@ const ProductForm = ({ onClose, product = null }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Precio</label>
             <input
               type="number"
-              name="precio"
+              name="price"
               required
               min="0"
               step="0.01"
-              value={formData.precio}
+              value={formData.price}
               onChange={handleChange}
               placeholder="0.00"
-              className="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">URL Imagen</label>
-            <input
-              type="url"
-              name="url"
-              required
-              value={formData.url}
-              onChange={handleChange}
-              placeholder="https://ejemplo.com/imagen.jpg"
               className="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -151,10 +146,10 @@ const ProductForm = ({ onClose, product = null }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
             <input
               type="number"
-              name="cantidad"
+              name="quantity"
               required
               min="0"
-              value={formData.cantidad}
+              value={formData.quantity}
               onChange={handleChange}
               placeholder="Cantidad disponible"
               className="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -164,15 +159,15 @@ const ProductForm = ({ onClose, product = null }) => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
             <select
-              name="categoria"
+              name="category"
               required
-              value={formData.categoria}
+              value={formData.category}
               onChange={handleChange}
               className="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Seleccionar Categoría</option>
               {categories.map((category) => (
-                <option key={category.id} value={category.id}>{category.nombre}</option>
+                <option key={category.id} value={category.id}>{category.name}</option>
               ))}
             </select>
           </div>
@@ -195,12 +190,12 @@ const ProductForm = ({ onClose, product = null }) => {
           <div className="sm:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
             <textarea
-              name="descripcion"
+              name="description"
               required
-              value={formData.descripcion}
+              value={formData.description}
               onChange={handleChange}
               placeholder="Descripción del producto"
-              rows="4"
+              rows={4}
               className="w-full px-4 py-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             ></textarea>
           </div>

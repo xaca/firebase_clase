@@ -1,7 +1,10 @@
 export interface Product {
   id: string;
-  nombre: string;
-  precio: number;
+  name: string;
+  price: number;
   url: string;
-  cantidad: number;
+  quantity: number;
+  category: string;
+  description: string;
+  status: "In Stock" | "Low Stock" | "Out of Stock";
 } 

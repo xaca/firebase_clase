@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from "react-router";
 import { firebaseConfig } from "../../lib/xaca/utils/config";
 import readUser from "../../lib/xaca/data/read_user";
 import Profile from "../auth/profile";
-import { UserInfo } from "../../lib/xaca/data/user_info";
+import { UserInfo } from "../../types/user_info";
 import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from "@/store";
 import 'animate.css';
@@ -71,6 +71,9 @@ export default function Menu(){
           <NavLink to="/gallery" className="ml-4 mr-4">
             Galería
           </NavLink>
+          {isLoggedIn && <NavLink to="/edit_profile" className="ml-4 mr-4">
+            Editar Perfil
+          </NavLink>}
           {(isLoggedIn && userInfo?.role === "admin") && (
             <NavLink to="/dashboard" className="ml-4 mr-4">
               Dashboard

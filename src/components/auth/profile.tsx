@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { UserInfo } from '../../lib/xaca/data/user_info';
+import { UserInfo } from '@/lib/xaca/data';
 import { useEffect } from 'react';
 
 export default function Profile({  
@@ -46,7 +46,7 @@ export default function Profile({
                         <X className="cursor-pointer" onClick={closeProfile} />
                     </div>
                     <div className="flex items-center mt-4">
-                        <img className="w-16 h-16 rounded-full mr-4" src="/path/to/profile.jpg" alt="Profile" />
+                        <img className="w-16 h-16 rounded-full mr-4" src={`${userInfo?.avatar}`} alt="Profile" />
                         <div>
                             <h2 className="text-lg font-semibold">{`${userInfo?.nombre} ${userInfo?.apellido}`}</h2>
                             <p className="text-sm text-gray-600">{userInfo?.correo}</p>

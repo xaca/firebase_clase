@@ -3,59 +3,19 @@ import { useEffect,useState } from "react";
 import { Product } from "@/types/product";
 import readProducts from "../../lib/xaca/data/read_product";
 import CardProduct from "./card_product";
+import { useInventarioStore } from "@/store/inventarioStore";
 
 export default function Gallery(){
     //const params = useParams();
-    const datos = [
-        {
-            nombre:"Licuadora",
-            descripcion:"Licuadora de tres velocidades",
-            precio:30000,
-            cantidad:20
-        },
-        {
-            nombre:"Tv",
-            descripcion:"Smart Tv 4k",
-            precio:2500000,
-            cantidad:10
-        },
-        {
-            nombre:"Tostadora",
-            descripcion:"Tostadora de dos rebanadas",
-            precio:70000,
-            cantidad:12
-        },
-        {
-            nombre:"Aspiradora",
-            descripcion:"Aspiradora de 2000w",
-            precio:150000,
-            cantidad:5
-        },
-        {
-            nombre:"Nevera",
-            descripcion:"Nevera de 200 litros",
-            precio:1500000,
-            cantidad:3
-        },
-        {
-            nombre:"Ventilador",
-            descripcion:"Ventilador de 2000w",
-            precio:150000,
-            cantidad:5
-        },
-        {
-            nombre:"Computador",
-            descripcion:"Computador de 16gb de ram",
-            precio:150000,
-            cantidad:5
-        }
-    ]
+
+    const {setInventario} = useInventarioStore();
     const [products,setProducts] = useState<Product[]>([]);
     useEffect(()=> {
         (async () => {
             const products = await readProducts();
             console.log(products);
             setProducts(products as Product[]);
+            setInventario(products as Product[]);
         })();
     }, []);
     return(<section className="w-full h-full justify-center mt-4 p-6">

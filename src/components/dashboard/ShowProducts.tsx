@@ -14,7 +14,7 @@ import readUser from '../../lib/xaca/data/read_user';
 import { Product } from '@/types/product';
 import { Category } from '@/types/category';
 
-  export default function ShowProduct() {
+  export default function ShowProducts() {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);

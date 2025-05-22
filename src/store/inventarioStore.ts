@@ -2,21 +2,30 @@ import { Product } from "@/types/product";
 import { create } from "zustand";
 
 interface InventarioState {
-    products: Product[];
+    inventario: Product[];
 }
 
 interface InventarioActions {
     updateInventario: (productId: string, cantidad: number) => void;
-    checkInventario: (productId: string) => void;
+    getInventarioItem: (productId: string) => Product | null;
+    getInventario: () => Product[];
+    setInventario: (inventario: Product[]) => void;
     //inStock: (productId: string) => boolean;
 }
 
 export const useInventarioStore = create<InventarioState & InventarioActions>((set) => ({
-    products: [],
+    inventario: [],
     updateInventario: (productId: string, cantidad: number) => set((state) => ({
-        products: state.products.map((product) => product.id === productId ? { ...product, cantidad } : product)
+        inventario: state.inventario.map((product) => product.id === productId ? { ...product, cantidad } : product)
     })),
-    checkInventario: (productId: string) => set((state) => ({
-        products: state.products.filter((product) => product.id !== productId)
-    }))
+    getInventarioItem: (productId: string): Product | null => {
+        const state = useInventarioStore.getState() as InventarioState;
+        const product = state.inventario.find((product: Product) => product.id === productId);
+        return product || null;
+    },
+    getInventario: () => {
+        const state = useInventarioStore.getState() as InventarioState;
+        return state.inventario;
+    },
+    setInventario: (inventario: Product[]) => set({ inventario })
 }))

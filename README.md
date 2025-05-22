@@ -14,7 +14,9 @@
 - Subir la imagen del producto a firestorage (ok)
 - Integrar productos similares en el carrito, para que se actualice la cantidad y no quede repetido (ok)
 - Totalizar el contador del carrito, con el total de elementos (ok)
-- Ajustar responsive en tablet a dos columnas y menor tamaño
+- Ajustar responsive en tablet a dos columnas y menor tamaño (ok)
+- Ajustar responsive Menú (ok)
+- Ajustar responsive del carrito
 - Ver Detalle producto
 - Loading a galeria mientras carga
 - Checkout/Pago del carrito con paypal

@@ -3,8 +3,10 @@ import { Product } from "@/types/product";
 import { Plus, Minus } from 'lucide-react';
 import { useState } from "react";
 import {Toaster,toast} from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 export default function CardProduct({product}:{product:any}){
+    const navigate = useNavigate();
     const {products,addProduct,updateProduct} = useCartStore();
     const [cantidad, setCantidad] = useState(0);
     
@@ -49,6 +51,7 @@ export default function CardProduct({product}:{product:any}){
     return(
         <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300 max-w-sm">
             <Toaster />
+            <div onClick={() => navigate(`/product/${product.id}`)} className="cursor-pointer">
             {/* Product Image */}
             <div className="relative aspect-square mb-4">
                 <img 
@@ -62,7 +65,7 @@ export default function CardProduct({product}:{product:any}){
             <h2 className="text-gray-800 font-medium text-lg mb-3 line-clamp-2">
                 {product.name}
             </h2>
-            
+            </div>
             {/* Price Section */}
             <div className="flex flex-col mb-2">
                 <div>

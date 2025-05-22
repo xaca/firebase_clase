@@ -63,29 +63,29 @@ export default function Menu(){
 
     return (<>
       {userInfo && <Profile userInfo={userInfo} onClose={() => setIsProfileOpen(false)}  />}
-      <nav className="flex justify-between h-[30px] mt-2 sticky top-0 bg-white z-100">
-        <div>
+      <nav className="flex justify-between h-[70px] md:h-[50px] pt-3 sticky top-0 bg-white z-100">
+        <div className="grid grid-cols-2 gap-1 md:flex">
           <NavLink to="/" className="ml-4 mr-4">
             Home
           </NavLink>
           <NavLink to="/gallery" className="ml-4 mr-4">
             Galería
           </NavLink>
-          {isLoggedIn && <NavLink to="/edit_profile" className="ml-4 mr-4">
-            Editar Perfil
-          </NavLink>}
           {(isLoggedIn && userInfo?.role === "admin") && (
             <NavLink to="/dashboard" className="ml-4 mr-4">
               Dashboard
             </NavLink>
           )}
+          {isLoggedIn && <NavLink to="/edit_profile" className="ml-4 mr-4">
+            Editar Perfil
+          </NavLink>}
           {!isLoggedIn && (
-            <NavLink to="/login" className="mr-4">
+            <NavLink to="/login" className="ml-4 mr-4">
               Login
             </NavLink>
           )}
           {!isLoggedIn && (
-            <NavLink to="/register" className="mr-4">
+            <NavLink to="/register" className="ml-4 mr-4">
               Register
             </NavLink>
           )}          

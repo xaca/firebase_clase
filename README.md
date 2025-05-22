@@ -8,23 +8,24 @@
 - Mostrar los productos en la galeria (ok)
 - Agregar productos al carrito (ok)
 - Previsualizar carrito (ok)
+- Subir imagen del usuario en editar perfil (ok)
+- Ajustar fondo azul en secciones como carrito (ok)
+- Ajustar cantidad (ok)
+- Subir la imagen del producto a firestorage (ok)
+- Integrar productos similares en el carrito, para que se actualice la cantidad y no quede repetido (ok)
+- Totalizar el contador del carrito, con el total de elementos (ok)
+- Ajustar responsive en tablet a dos columnas y menor tamaño
+- Ver Detalle producto
 - Loading a galeria mientras carga
-- Checkout/Pago del carrito
+- Checkout/Pago del carrito con paypal
+- Checkout/Pago del carrito con wompi/payu
 - Al pagar, actualización del inventario  
 - Generación de orden de despacho
-- Subir imagen del usuario en editar perfil (ok)
-- Subir la imagen del producto a firestorage
-- Subir imagenes asociadas del producto
-- Ajustar fondo azul en secciones como carrito (ok)
+- Subir imágenes asociadas del producto
 - Generar un pdf usando un encabezado para imprimir
-- Ajustar cantidad (ok)
-- Ver Detalle producto
 - Agregar historial de compras del usuario
 - Agregar historial de carrito abandonado
 - Controlar estado de inventario cuando se acaban los productos
-- Integrar productos similares en el carrito, para que se actualice la cantidad y no quede repetido
-- Ajustar responsive en tablet a dos columnas y menor tamaño
-- Totalizar el contador del carrito, con el total de elementos
 - Controlar agregar productos al inventario segun la cantidad disponible
 - Actualizar el perfil cuando se actualiza la información del usuario
 - Crear sección para administrar roles de usuario

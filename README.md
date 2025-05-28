@@ -16,8 +16,9 @@
 - Totalizar el contador del carrito, con el total de elementos (ok)
 - Ajustar responsive en tablet a dos columnas y menor tamaño (ok)
 - Ajustar responsive Menú (ok)
+- Ver Detalle producto (ok)
 - Ajustar responsive del carrito
-- Ver Detalle producto
+- Ajustar responsive del dashboard
 - Loading a galeria mientras carga
 - Checkout/Pago del carrito con paypal
 - Checkout/Pago del carrito con wompi/payu

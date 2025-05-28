@@ -10,9 +10,11 @@ import readUser from '../../lib/xaca/data/read_user';
 import { UserInfo } from '@/types/user_info';
 import { UploadImageResponse } from '@/types/upload_image_response';
 import { uploadImage } from '@/lib/xaca/utils/images_storage';
+import useUserStore from '@/store/userStore';
 
 export default function EditProfile() {
     const navigate = useNavigate();
+    const {user,updateUser} = useUserStore();
     const fileInputRef = useRef<HTMLInputElement>(null) as React.RefObject<HTMLInputElement> | null;
     const [formData, setFormData] = useState({
         id: '',
@@ -211,10 +213,21 @@ export default function EditProfile() {
                 return;
             }
             const saveResult = await saveUserData(formData.id);
-            if(saveResult.error){
+            if(saveResult.error){                
                 toast.error("Error al guardar los datos del usuario");
             }
             else{
+                let userData: UserInfo = {
+                    id: formData.id,
+                    nombre: formData.nombre,
+                    apellido: formData.apellido,
+                    celular: formData.celular,
+                    direccion: formData.direccion,
+                    correo: formData.correo,
+                    avatar: formData.avatar,
+                    role: formData.role
+                }
+                updateUser(userData);
                 toast.success("Perfil actualizado con éxito");
                 setTimeout(()=>{
                     navigate("/")
@@ -311,6 +324,7 @@ export default function EditProfile() {
                                     onChange={handleChange}
                                     className={`w-full bg-gray-200 rounded-md px-4 py-2 text-lg placeholder:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 ${errors.correo ? 'border border-red-500' : ''}`}
                                     placeholder="Correo"
+                                    readOnly={true}
                                 />
                                 {errors.correo && <p className="mt-1 text-sm text-red-600">{errors.correo}</p>}
                             </div>

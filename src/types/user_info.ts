@@ -1,4 +1,5 @@
 export interface UserInfo {
+    id: string;
     correo: string;
     apellido: string;
     direccion: string;

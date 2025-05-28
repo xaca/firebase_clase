@@ -1,21 +1,22 @@
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { UserInfo } from "@/types/user_info";
 import { useEffect } from 'react';
+import useUserStore from '@/store/userStore';
 
 export default function Profile({  
     onClose, 
-    userInfo 
 }: { 
     onClose: () => void;
-    userInfo: UserInfo;
 }) {
     const navigate = useNavigate();
+    const {user} = useUserStore();
+
     useEffect(() => {
-        if(userInfo === null){
+        if(user === null){
             navigate('/signout');
         }
-    }, [userInfo]);
+        console.log(user);
+    }, [user]);
 
     const handleLogout = () => {
         onClose();
@@ -46,12 +47,12 @@ export default function Profile({
                         <X className="cursor-pointer" onClick={closeProfile} />
                     </div>
                     <div className="flex items-center mt-4">
-                        <img className="w-16 h-16 rounded-full mr-4" src={`${userInfo?.avatar}`} alt="Profile" />
+                        <img className="w-16 h-16 rounded-full mr-4" src={`${user?.avatar}`} alt="Profile" />
                         <div>
-                            <h2 className="text-lg font-semibold">{`${userInfo?.nombre} ${userInfo?.apellido}`}</h2>
-                            <p className="text-sm text-gray-600">{userInfo?.correo}</p>
-                            <p className="text-sm text-gray-600">Dirección: {userInfo?.direccion}</p>
-                            <p className="text-sm text-gray-600">Celular: {userInfo?.celular}</p>
+                            <h2 className="text-lg font-semibold">{`${user?.nombre} ${user?.apellido}`}</h2>
+                            <p className="text-sm text-gray-600">{user?.correo}</p>
+                            <p className="text-sm text-gray-600">Dirección: {user?.direccion}</p>
+                            <p className="text-sm text-gray-600">Celular: {user?.celular}</p>
                         </div>
                     </div>                    
                     <button onClick={handleLogout} className="text-sm text-gray-600 cursor-pointer">Cerrar sesión</button>

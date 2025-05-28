@@ -5,9 +5,10 @@ import { NavLink, useNavigate } from "react-router";
 import { firebaseConfig } from "../../lib/xaca/utils/config";
 import readUser from "../../lib/xaca/data/read_user";
 import Profile from "../auth/profile";
-import { UserInfo } from "../../types/user_info";
+import { UserInfo } from "@/types/user_info";
 import { ShoppingCart } from 'lucide-react';
-import { useCartStore } from "@/store";
+import { useCartStore } from "@/store/cartStore";
+import useUserStore from "@/store/userStore";
 import 'animate.css';
 
 export default function Menu(){
@@ -16,6 +17,7 @@ export default function Menu(){
     const [isProfileOpen,setIsProfileOpen] = useState(false);
     const navigate = useNavigate();
     const {products} = useCartStore();
+    const {setUser} = useUserStore();
 
     useEffect(() => {
       const app = initializeApp(firebaseConfig);
@@ -25,6 +27,7 @@ export default function Menu(){
           if(user !== null){
             const userData = await readUser(user.uid);
             setUserInfo(userData as UserInfo);
+            setUser(userData as UserInfo);
           }
       });
       
@@ -62,7 +65,7 @@ export default function Menu(){
     }
 
     return (<>
-      {userInfo && <Profile userInfo={userInfo} onClose={() => setIsProfileOpen(false)}  />}
+      {userInfo && <Profile onClose={() => setIsProfileOpen(false)}  />}
       <nav className="flex justify-between h-[70px] md:h-[50px] pt-3 sticky top-0 bg-white z-100">
         <div className="grid grid-cols-2 gap-1 md:flex">
           <NavLink to="/" className="ml-4 mr-4">

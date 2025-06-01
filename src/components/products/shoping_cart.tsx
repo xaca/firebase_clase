@@ -1,9 +1,16 @@
-import { useCartStore } from "@/store";
+import { useCartStore,useInventarioStore } from "@/store";
+import { Product } from "@/types/product";
 
 export default function ShopingCart() {
     const {products,removeProduct} = useCartStore();
-    const eliminarProducto = (id:string) => {
-        removeProduct(id);
+    const {getInventarioItem,updateInventario} = useInventarioStore();
+
+    const eliminarProducto = (product:Product) => {
+        const product_inventario = getInventarioItem(product.id);
+        removeProduct(product.id);
+        if(product_inventario){
+            updateInventario(product.id,product_inventario.quantity + product.quantity);
+        }
     }
     function total() {
         const total = products.reduce((acc, product) => acc + product.price * product.quantity, 0);
@@ -31,7 +38,7 @@ export default function ShopingCart() {
                     <td>{product.price}</td>
                     <td>{product.quantity}</td>
                     <td>
-                        <button onClick={() => eliminarProducto(product.id)}>Eliminar</button>
+                        <button onClick={() => eliminarProducto(product)}>Eliminar</button>
                     </td>
                 </tr>
             ))}

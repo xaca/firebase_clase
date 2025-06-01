@@ -6,7 +6,7 @@ interface InventarioState {
 }
 
 interface InventarioActions {
-    updateInventario: (productId: string, cantidad: number) => void;
+    updateInventario: (productId: string, quantity: number) => void;
     getInventarioItem: (productId: string) => Product | null;
     getInventario: () => Product[];
     setInventario: (inventario: Product[]) => void;
@@ -15,8 +15,8 @@ interface InventarioActions {
 
 export const useInventarioStore = create<InventarioState & InventarioActions>((set) => ({
     inventario: [],
-    updateInventario: (productId: string, cantidad: number) => set((state) => ({
-        inventario: state.inventario.map((product) => product.id === productId ? { ...product, cantidad } : product)
+    updateInventario: (productId: string, quantity: number) => set((state) => ({
+        inventario: state.inventario.map((product) => product.id === productId ? { ...product, quantity } : product)
     })),
     getInventarioItem: (productId: string): Product | null => {
         const state = useInventarioStore.getState() as InventarioState;

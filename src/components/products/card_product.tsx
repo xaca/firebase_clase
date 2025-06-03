@@ -73,7 +73,6 @@ export default function CardProduct({product}:{product:any}){
     return(currentProduct && (
         <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300 max-w-sm">
             <Toaster />
-            <span>{cantidad}</span>
             <div onClick={() => navigate(`/product/${currentProduct.id}`)} className="cursor-pointer">
             {/* Product Image */}
             <div className="relative aspect-square mb-4">

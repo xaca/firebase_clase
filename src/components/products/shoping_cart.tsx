@@ -1,5 +1,6 @@
 import { useCartStore,useInventarioStore } from "@/store";
 import { Product } from "@/types/product";
+import { Trash2 } from "lucide-react";
 
 export default function ShopingCart() {
     const {products,removeProduct} = useCartStore();
@@ -18,7 +19,7 @@ export default function ShopingCart() {
     }
     return(<><section className="overflow-x-hidden w-full h-full">
         <h1 className="text-2xl font-bold mt-8 mb-8 text-center">Carrito de compras</h1>
-        {(products.length>0 ? <table className="w-[800px] h-full mx-auto">
+        {(products.length>0 ? <table className="w-[350px] md:w-[750px] h-full mx-auto bg-white rounded-md">
             <thead>
                 <tr className="text-left">
                     <th></th>
@@ -28,22 +29,24 @@ export default function ShopingCart() {
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody className="text-[14px] md:text-[16px]">
             {products.map((product) => (
                 <tr key={product.id}>
                     <td>
-                        <img className="w-16 h-16" src={product.url} alt={product.name} />
+                        <img className="w-8 h-8 md:w-16 md:h-16" src={product.url} alt={product.name} />
                     </td>
                     <td>{product.name}</td>
-                    <td>{product.price}</td>
+                    <td>${product.price}</td>
                     <td>{product.quantity}</td>
                     <td>
-                        <button onClick={() => eliminarProducto(product)}>Eliminar</button>
+                        <button className="cursor-pointer" onClick={() => eliminarProducto(product)}>
+                        <Trash2 />
+                        </button>
                     </td>
                 </tr>
             ))}
             <tr>
-                <td colSpan={2}>Total</td>
+                <td className="text-right pr-4" colSpan={2}>Total</td>
                 <td colSpan={3}>${total()}</td>
             </tr>
             </tbody>

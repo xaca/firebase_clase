@@ -17,8 +17,10 @@
 - Ajustar responsive en tablet a dos columnas y menor tamaño (ok)
 - Ajustar responsive Menú (ok)
 - Ver Detalle producto (ok)
-- Ajustar responsive del carrito
-- Ajustar responsive del dashboard
+- Ajustar responsive del carrito (ok)
+- Ajustar responsive del dashboard (ok)
+- Validar borrar item del carrito
+- Modificar cantidad del carrito
 - Loading a galeria mientras carga
 - Checkout/Pago del carrito con paypal
 - Checkout/Pago del carrito con wompi/payu

@@ -191,40 +191,40 @@ import { Category } from '@/types/category';
     isAdmin
     && (<div className="p-6 mx-auto w-full">
     <Toaster/>
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-semibold">Product List</h1>
+      <div className="flex flex-col md:flex-row md:justify-between items-center mb-6">
+        <div className="flex w-full md:w-[250px] justify-between mb-4">
+          <h1 className="md:text-2xl text-xl text-left font-semibold">Product List</h1>
           {selectedProducts.length > 0 && (
             <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
               {selectedProducts.length} Selected
             </span>
           )}
-          <div className="ml-4">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Categories</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
+        </div>
+        <div className="w-full mb-4 md:w-[200px] text-center">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">All Categories</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="flex gap-3">
           <button
             onClick={() => setIsAddCategoryModalOpen(true)}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors"
+            className="text-sm lg:text-base bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700 transition-colors"
           >
             <FolderPlus className="text-lg" />
             ADD CATEGORY
           </button>
           <button
             onClick={() => setIsAddProductModalOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+            className="text-sm lg:text-base bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
           >
             <Plus className="text-lg" />
             ADD PRODUCT
@@ -232,115 +232,117 @@ import { Category } from '@/types/category';
         </div>
       </div>
 
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left">
-                <input
-                  type="checkbox"
-                  className="rounded border-gray-300"
-                  onChange={handleSelectAll}
-                  checked={selectedProducts.length === products.length}
-                />
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Product
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Category
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Price
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Stock
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {currentItems.map((product,index) => (
-              <tr
-                key={index}
-                className={`${
-                  selectedProducts.includes(product.id) ? 'bg-blue-50' : ''
-                } hover:bg-gray-50`}
-              >
-                <td className="px-6 py-4 whitespace-nowrap">
+      <div className="w-full mx-auto bg-white rounded-lg shadow overflow-hidden">
+        <div className="">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th scope="col" className="px-2 sm:px-6 py-3 text-left">
                   <input
                     type="checkbox"
                     className="rounded border-gray-300"
-                    checked={selectedProducts.includes(product.id)}
-                    onChange={() => handleSelectProduct(product.id)}
+                    onChange={handleSelectAll}
+                    checked={selectedProducts.length === products.length}
                   />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div className="h-10 w-10 flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full object-cover"
-                        src={product.url}
-                        alt={product.name}
-                      />
-                    </div>
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">
-                        {product.name}
+                </th>
+                <th scope="col" className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Product
+                </th>
+                <th scope="col" className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th scope="col" className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Price
+                </th>
+                <th scope="col" className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Stock
+                </th>
+                <th scope="col" className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th scope="col" className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentItems.map((product,index) => (
+                <tr
+                  key={index}
+                  className={`${
+                    selectedProducts.includes(product.id) ? 'bg-blue-50' : ''
+                  } hover:bg-gray-50`}
+                >
+                  <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300"
+                      checked={selectedProducts.includes(product.id)}
+                      onChange={() => handleSelectProduct(product.id)}
+                    />
+                  </td>
+                  <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0">
+                        <img
+                          className="h-full w-full rounded-full object-cover"
+                          src={product.url}
+                          alt={product.name}
+                        />
+                      </div>
+                      <div className="ml-2 sm:ml-4">
+                        <div className="text-xs sm:text-sm font-medium text-gray-900">
+                          {product.name}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  </td>
+                  <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {product?.categoryName}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  ${product.price}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {product.quantity}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-3 py-1 rounded-full text-xs ${getStatusColor(product.status)}`}>
-                    {product?.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <div className="flex gap-3">
-                    <button 
-                      className="text-gray-600 hover:text-blue-600"
-                      onClick={() => handleEditClick(product)}
-                    >
-                      <Pencil className="w-5 h-5" />
-                    </button>
-                    <button 
-                      className="text-gray-600 hover:text-red-600"
-                      onClick={() => handleDeleteClick(product)}
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </td>
+                  <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                    ${product.price}
+                  </td>
+                  <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {product.quantity}
+                  </td>
+                  <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 sm:px-3 py-1 rounded-full text-xs ${getStatusColor(product.status)}`}>
+                      {product?.status}
+                    </span>
+                  </td>
+                  <td className="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div className="flex gap-2 sm:gap-3">
+                      <button 
+                        className="text-gray-600 hover:text-blue-600"
+                        onClick={() => handleEditClick(product)}
+                      >
+                        <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </button>
+                      <button 
+                        className="text-gray-600 hover:text-red-600"
+                        onClick={() => handleDeleteClick(product)}
+                      >
+                        <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         
-        <div className="px-6 py-4 flex items-center justify-between border-t border-gray-200">
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-700">
+        <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-gray-200 space-y-4 sm:space-y-0">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <span className="text-sm text-gray-700 whitespace-nowrap">
               Showing {indexOfFirstItem + 1} - {Math.min(indexOfLastItem, filteredProducts.length)} of {filteredProducts.length}
             </span>
             {filteredProducts.length > 5 && (
               <select
                 value={itemsPerPage}
                 onChange={handleItemsPerPageChange}
-                className="px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full sm:w-auto px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value={5}>5 per page</option>
                 <option value={10}>10 per page</option>
@@ -350,7 +352,7 @@ import { Category } from '@/types/category';
             )}
           </div>
           {filteredProducts.length > itemsPerPage && (
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
               <button 
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -362,7 +364,7 @@ import { Category } from '@/types/category';
               >
                 Previous
               </button>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                   <button
                     key={page}

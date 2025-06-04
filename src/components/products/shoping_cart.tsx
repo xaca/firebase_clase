@@ -1,23 +1,84 @@
 import { useCartStore,useInventarioStore } from "@/store";
+import { DeleteConfirmationModal } from "@/components/dashboard";
 import { Product } from "@/types/product";
-import { Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 
 export default function ShopingCart() {
-    const {products,removeProduct} = useCartStore();
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+
+    const {products,updateProduct,removeProduct} = useCartStore();
     const {getInventarioItem,updateInventario} = useInventarioStore();
 
-    const eliminarProducto = (product:Product) => {
-        const product_inventario = getInventarioItem(product.id);
-        removeProduct(product.id);
-        if(product_inventario){
-            updateInventario(product.id,product_inventario.quantity + product.quantity);
+    const eliminarProducto = () => {
+        const product:Product|null = productToDelete;
+        setIsDeleting(true);
+        if(product){
+            const product_inventario = getInventarioItem(product.id);
+            removeProduct(product.id);
+            if(product_inventario){
+                updateInventario(product.id,product_inventario.quantity + product.quantity);
+            }
         }
+        setIsDeleting(false);
+        setIsDeleteModalOpen(false);
+        setProductToDelete(null);
     }
     function total() {
         const total = products.reduce((acc, product) => acc + product.price * product.quantity, 0);
         return total;
     }
-    return(<><section className="overflow-x-hidden w-full h-full">
+    const restarCantidad = (product:Product) => {
+        const productExistente = products.find(p => p.id === product.id);
+        if(productExistente){
+            if(productExistente.quantity-1 >= 1){
+                productExistente.quantity--;
+                updateProduct(productExistente);
+            }
+            else{
+                toast.error("La minima cantidad es 1");
+            }
+        }
+        else{
+            toast.error("No se puede restar cantidad");
+        }
+    }
+    const sumarCantidad = (product:Product) => {
+        const productExistente = products.find(p => p.id === product.id);
+        const inventario = getInventarioItem(product.id);
+        if(productExistente && inventario){
+            if(productExistente.quantity <= inventario.quantity)
+            {
+                productExistente.quantity++;
+                updateProduct(productExistente);
+            }
+            else
+            {
+                toast.error("Llego al limite del inventario");
+            }               
+        }
+        else{
+            toast.error("No se puede agregar más productos");   
+        }
+    }
+    return(<>
+        <Toaster />
+        <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          if (!isDeleting) {
+            setIsDeleteModalOpen(false);
+            setProductToDelete(null);
+          }
+        }}
+        onConfirm={eliminarProducto}
+        productName={productToDelete?.name || ''}
+        isDeleting={isDeleting}
+      />
+        <section className="overflow-x-hidden w-full h-full">
         <h1 className="text-2xl font-bold mt-8 mb-8 text-center">Carrito de compras</h1>
         {(products.length>0 ? <table className="w-[350px] md:w-[750px] h-full mx-auto bg-white rounded-md">
             <thead>
@@ -37,9 +98,18 @@ export default function ShopingCart() {
                     </td>
                     <td>{product.name}</td>
                     <td>${product.price}</td>
-                    <td>{product.quantity}</td>
+                    <td>  
+                        <div className="flex items-center gap-2">                      
+                        <Minus onClick={() => restarCantidad(product)} className="cursor-pointer text-gray-500 rounded-md border-2 border-black" />
+                        <input className="w-5 text-center" type="text" readOnly value={product.quantity} name="cantidad" id="cantidad" />
+                        <Plus onClick={() => sumarCantidad(product)} className="cursor-pointer text-gray-500 rounded-md border-2 border-black" />
+                        </div>
+                    </td>
                     <td>
-                        <button className="cursor-pointer" onClick={() => eliminarProducto(product)}>
+                        <button className="cursor-pointer" onClick={() => {
+                            setProductToDelete(product);
+                            setIsDeleteModalOpen(true);
+                        }}>
                         <Trash2 />
                         </button>
                     </td>

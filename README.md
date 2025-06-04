@@ -19,7 +19,7 @@
 - Ver Detalle producto (ok)
 - Ajustar responsive del carrito (ok)
 - Ajustar responsive del dashboard (ok)
-- Validar borrar item del carrito
+- Validar borrar item del carrito (ok)
 - Modificar cantidad del carrito
 - Loading a galeria mientras carga
 - Checkout/Pago del carrito con paypal

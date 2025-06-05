@@ -102,16 +102,24 @@ export default function CardProduct({product}:{product:any}){
                 </div>
                 <div>Inventario: {currentProduct.quantity}</div>
                 <div className="mt-4 flex items-center gap-2">
-                <div className="mt-4" onClick={() => addToCart()}    >
+                {currentProduct.quantity === 0 && (
+                    <div className="mt-4 flex items-center gap-2 text-red-500">
+                        Sin stock
+                    </div>
+                )}
+                {currentProduct.quantity > 0 && <div className="mt-4" onClick={() => addToCart()}    >
                     <button className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-md">
                         Agregar
                     </button>
-                </div>
+                </div>}
+                {currentProduct.quantity > 0 && (
                 <div className="mt-4 flex items-center gap-2">
                     <Minus onClick={restarCantidad} className="cursor-pointer text-gray-500 rounded-md border-2 border-black" />
                     <input className="w-5 text-center" type="text" readOnly value={cantidad} name="cantidad" id="cantidad" />
                     <Plus onClick={sumarCantidad} className="cursor-pointer text-gray-500 rounded-md border-2 border-black" />
                 </div>
+                )}
+                
                 </div>
             </div>
             

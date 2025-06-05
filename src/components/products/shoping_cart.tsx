@@ -32,18 +32,20 @@ export default function ShopingCart() {
     }
     const restarCantidad = (product:Product) => {
         const productExistente = products.find(p => p.id === product.id);
+        
         if(productExistente){
-            const inventario = getInventarioItem(product.id)?.quantity;
+            const inventario = getInventarioItem(product.id);
             if(inventario){
                 if(productExistente.quantity-1 >= 1){
                     productExistente.quantity--;
                     updateProduct(productExistente);
-                    updateInventario(product.id,inventario + 1);   
+                    updateInventario(product.id,inventario.quantity + 1);   
                 }
                 else{
                     toast.error("La minima cantidad es 1");
                 }
             }
+
         }
         else{
             toast.error("No se puede restar cantidad");
@@ -52,13 +54,13 @@ export default function ShopingCart() {
     const sumarCantidad = (product:Product) => {
         const productExistente = products.find(p => p.id === product.id);
         if(productExistente){
-            const inventario = getInventarioItem(product.id)?.quantity;
+            const inventario = getInventarioItem(product.id);
             if(inventario){
-                if(inventario > 0)
+                if(inventario.quantity > 0)
                 {
                     productExistente.quantity++;
                     updateProduct(productExistente);   
-                    updateInventario(product.id,inventario - 1);             
+                    updateInventario(product.id,inventario.quantity - 1);             
                 }
                 else
                 {

@@ -1,11 +1,11 @@
 export const firebaseConfig = {
-    apiKey: "AIzaSyAg6fbJWydV0VLuX-HdCH7r_tZRJpMWRCY",
-    authDomain: "fullstack-b065a.firebaseapp.com",
-    projectId: "fullstack-b065a",
-    storageBucket: "fullstack-b065a.firebasestorage.app",
-    messagingSenderId: "465684462524",
-    appId: "1:465684462524:web:d7953906643b3415c189b9"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 //export const firebaseStorage =  "gs://fullstack-fed2d.appspot.com";
-export const firebaseStorage =  "gs://fullstack-b065a.firebasestorage.app";
+export const firebaseStorage = import.meta.env.VITE_FIREBASE_STORAGE;

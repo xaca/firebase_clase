@@ -20,17 +20,18 @@
 - Ajustar responsive del carrito (ok)
 - Ajustar responsive del dashboard (ok)
 - Validar borrar item del carrito (ok)
-- Modificar cantidad del carrito
+- Modificar cantidad del carrito (ok)
+- Controlar estado de inventario antes de pagar (ok)
+- Actualizar el perfil cuando se actualiza la información del usuario
+- Crear sección para administrar roles de usuario
+- Controlar estado de inventario cuando se acaban los productos, cuando se hace la compra
+- Subir imágenes asociadas del producto
+- Agregar historial de carrito abandonado
 - Loading a galeria mientras carga
 - Checkout/Pago del carrito con paypal
 - Checkout/Pago del carrito con wompi/payu
 - Al pagar, actualización del inventario  
 - Generación de orden de despacho
-- Subir imágenes asociadas del producto
 - Generar un pdf usando un encabezado para imprimir
 - Agregar historial de compras del usuario
-- Agregar historial de carrito abandonado
-- Controlar estado de inventario cuando se acaban los productos
 - Controlar agregar productos al inventario segun la cantidad disponible
-- Actualizar el perfil cuando se actualiza la información del usuario
-- Crear sección para administrar roles de usuario

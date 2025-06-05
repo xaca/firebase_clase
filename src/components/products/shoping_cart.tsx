@@ -2,14 +2,13 @@ import { useCartStore,useInventarioStore } from "@/store";
 import { DeleteConfirmationModal } from "@/components/dashboard";
 import { Product } from "@/types/product";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState} from "react";
 import { Toaster, toast } from "react-hot-toast";
 
 export default function ShopingCart() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-
     const {products,updateProduct,removeProduct} = useCartStore();
     const {getInventarioItem,updateInventario} = useInventarioStore();
 
@@ -34,12 +33,16 @@ export default function ShopingCart() {
     const restarCantidad = (product:Product) => {
         const productExistente = products.find(p => p.id === product.id);
         if(productExistente){
-            if(productExistente.quantity-1 >= 1){
-                productExistente.quantity--;
-                updateProduct(productExistente);
-            }
-            else{
-                toast.error("La minima cantidad es 1");
+            const inventario = getInventarioItem(product.id)?.quantity;
+            if(inventario){
+                if(productExistente.quantity-1 >= 1){
+                    productExistente.quantity--;
+                    updateProduct(productExistente);
+                    updateInventario(product.id,inventario + 1);   
+                }
+                else{
+                    toast.error("La minima cantidad es 1");
+                }
             }
         }
         else{
@@ -48,21 +51,25 @@ export default function ShopingCart() {
     }
     const sumarCantidad = (product:Product) => {
         const productExistente = products.find(p => p.id === product.id);
-        const inventario = getInventarioItem(product.id);
-        if(productExistente && inventario){
-            if(productExistente.quantity <= inventario.quantity)
-            {
-                productExistente.quantity++;
-                updateProduct(productExistente);
-            }
-            else
-            {
-                toast.error("Llego al limite del inventario");
-            }               
+        if(productExistente){
+            const inventario = getInventarioItem(product.id)?.quantity;
+            if(inventario){
+                if(inventario > 0)
+                {
+                    productExistente.quantity++;
+                    updateProduct(productExistente);   
+                    updateInventario(product.id,inventario - 1);             
+                }
+                else
+                {
+                    toast.error("Llego al limite del inventario");
+                } 
+            }              
         }
         else{
             toast.error("No se puede agregar más productos");   
         }
+        
     }
     return(<>
         <Toaster />
@@ -101,7 +108,7 @@ export default function ShopingCart() {
                     <td>  
                         <div className="flex items-center gap-2">                      
                         <Minus onClick={() => restarCantidad(product)} className="cursor-pointer text-gray-500 rounded-md border-2 border-black" />
-                        <input className="w-5 text-center" type="text" readOnly value={product.quantity} name="cantidad" id="cantidad" />
+                        <input className="w-5 text-center"  type="text" readOnly value={product.quantity} name="cantidad" id="cantidad" />
                         <Plus onClick={() => sumarCantidad(product)} className="cursor-pointer text-gray-500 rounded-md border-2 border-black" />
                         </div>
                     </td>
